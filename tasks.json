@@ -1,0 +1,473 @@
+{
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Absorption Phase",
+      "level": "A2",
+      "months": "1-4",
+      "description": "Building mental maps through repetition. Focus: listening + Anki + basic output."
+    },
+    {
+      "id": "phase2",
+      "name": "Volume Phase",
+      "level": "B1",
+      "months": "5-8",
+      "description": "Massive input. Transition to native content. Build speaking confidence."
+    },
+    {
+      "id": "phase3",
+      "name": "Output Phase",
+      "level": "B2",
+      "months": "9-12",
+      "description": "Active production. B2 exam prep. Make everything automatic."
+    }
+  ],
+  
+  "resources": {
+    "anki": {
+      "A2": [
+        {
+          "name": "Anki: Review all due cards",
+          "description": "Don't skip. This is muscle memory building. Focus on A2 vocabulary.",
+          "time": "10min",
+          "type": "anki"
+        },
+        {
+          "name": "Anki: Add 5 new A2 cards from Clémence",
+          "description": "Pick 5 words/phrases from recent Clémence lessons. Include example sentences.",
+          "time": "5min",
+          "type": "anki"
+        },
+        {
+          "name": "Anki: Review + 5 new cards (A2 connectors)",
+          "description": "Donc, alors, puis, ensuite, enfin — linking words for storytelling.",
+          "time": "10min",
+          "type": "anki"
+        }
+      ],
+      "B1": [
+        {
+          "name": "Anki: Review all due cards",
+          "description": "Focus on B1 subjunctive triggers and conditionals. Don't rush.",
+          "time": "12min",
+          "type": "anki"
+        },
+        {
+          "name": "Anki: Add 5 new B1 cards (subjunctive/conditional)",
+          "description": "Il faut que, bien que, pour que... Add verb conjugations + examples.",
+          "time": "8min",
+          "type": "anki"
+        },
+        {
+          "name": "Anki: Review + 10 new B1 vocabulary cards",
+          "description": "Advanced vocabulary from InnerFrench or Clémence B1 lessons.",
+          "time": "15min",
+          "type": "anki"
+        }
+      ],
+      "B2": [
+        {
+          "name": "Anki: Review all due cards",
+          "description": "B2 vocab consolidation. Focus on formal register and discourse markers.",
+          "time": "15min",
+          "type": "anki"
+        },
+        {
+          "name": "Anki: Add 10 new B2 cards (advanced connectors)",
+          "description": "Cependant, néanmoins, par ailleurs, en outre — essay-level connectors.",
+          "time": "10min",
+          "type": "anki"
+        },
+        {
+          "name": "Anki: Review B2 idioms and expressions",
+          "description": "Focus on natural-sounding phrases and collocations.",
+          "time": "12min",
+          "type": "anki"
+        }
+      ]
+    },
+    
+    "listening": {
+      "A2": [
+        {
+          "name": "Simply French Podcast A2 episode",
+          "description": "Pick any A2 episode. Listen twice — first for gist, second for details.",
+          "time": "15min",
+          "type": "listen",
+          "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c"
+        },
+        {
+          "name": "InnerFrench slow episode (beginner)",
+          "description": "Hugo speaks slowly. Just absorb — don't translate everything.",
+          "time": "15min",
+          "type": "listen",
+          "url": "https://innerfrench.com/podcast/"
+        },
+        {
+          "name": "Easy French street interviews (A2 level)",
+          "description": "Real conversations with French subtitles. Note 5 new words.",
+          "time": "12min",
+          "type": "listen",
+          "url": "https://www.youtube.com/@easyfrench"
+        },
+        {
+          "name": "Français Facile news segment",
+          "description": "News in simplified French. Current events at manageable speed.",
+          "time": "10min",
+          "type": "listen",
+          "url": "https://savoirs.rfi.fr/fr/apprendre-enseigner/langue-francaise/journal-en-francais-facile"
+        }
+      ],
+      "B1": [
+        {
+          "name": "InnerFrench B1 episode (normal speed)",
+          "description": "Normal speed. Take notes on 5 new words + their context.",
+          "time": "20min",
+          "type": "listen",
+          "url": "https://innerfrench.com/podcast/"
+        },
+        {
+          "name": "Simply French Podcast B1 episode",
+          "description": "Intermediate level. Listen without subtitles first, then with.",
+          "time": "18min",
+          "type": "listen",
+          "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c"
+        },
+        {
+          "name": "Easy French street interviews",
+          "description": "Real French, unscripted. Use French subtitles if needed.",
+          "time": "15min",
+          "type": "listen",
+          "url": "https://www.youtube.com/@easyfrench"
+        },
+        {
+          "name": "RFI news in slow French",
+          "description": "Current events at manageable speed. Great for real-world vocabulary.",
+          "time": "15min",
+          "type": "listen",
+          "url": "https://savoirs.rfi.fr/fr"
+        }
+      ],
+      "B2": [
+        {
+          "name": "InnerFrench B2 episode (advanced topics)",
+          "description": "Complex topics. No English support. Take notes in French.",
+          "time": "25min",
+          "type": "listen",
+          "url": "https://innerfrench.com/podcast/"
+        },
+        {
+          "name": "France Culture podcast episode",
+          "description": "Native-speed, intellectual discussions. Push your limits.",
+          "time": "20min",
+          "type": "listen",
+          "url": "https://www.radiofrance.fr/franceculture"
+        },
+        {
+          "name": "Le Monde news podcast",
+          "description": "Real news for French people. No simplification.",
+          "time": "20min",
+          "type": "listen",
+          "url": "https://www.lemonde.fr/podcasts/"
+        },
+        {
+          "name": "Simply French B2 conversation",
+          "description": "Advanced discussions on current topics.",
+          "time": "18min",
+          "type": "listen",
+          "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c"
+        }
+      ]
+    },
+    
+    "speaking": {
+      "A2": [
+        {
+          "name": "Record yourself: describe your day (2 minutes)",
+          "description": "Talk out loud. Don't stop to think. Use present + passé composé.",
+          "time": "10min",
+          "type": "speak"
+        },
+        {
+          "name": "Shadow 10 sentences from last Clémence lesson",
+          "description": "Repeat out loud 10x each. Mimic pronunciation exactly.",
+          "time": "10min",
+          "type": "speak"
+        },
+        {
+          "name": "Shadow a Simply French A2 episode you already heard",
+          "description": "Full episode shadowing. Pause and repeat each sentence.",
+          "time": "15min",
+          "type": "speak"
+        },
+        {
+          "name": "Practice introducing yourself (3 different ways)",
+          "description": "Formal, informal, professional. Record all three.",
+          "time": "12min",
+          "type": "speak"
+        }
+      ],
+      "B1": [
+        {
+          "name": "Prep 3 topics for imaginary conversation",
+          "description": "What would you talk about with a French friend? Write key vocab, then speak for 2min on each topic.",
+          "time": "15min",
+          "type": "speak"
+        },
+        {
+          "name": "Shadow InnerFrench episode you've already heard",
+          "description": "Full episode. Focus on intonation patterns.",
+          "time": "20min",
+          "type": "speak"
+        },
+        {
+          "name": "Record yourself: tell a story from your week",
+          "description": "5 minutes. Use imparfait for description, passé composé for events.",
+          "time": "15min",
+          "type": "speak"
+        },
+        {
+          "name": "Practice giving your opinion on 3 topics",
+          "description": "Pick: télétravail, réseaux sociaux, écologie. 2min each. Use 'Je pense que..., à mon avis...'",
+          "time": "15min",
+          "type": "speak"
+        }
+      ],
+      "B2": [
+        {
+          "name": "Record 5min opinion piece on a complex topic",
+          "description": "Pick: immigration, AI, climate change. Argue BOTH sides. Use formal connectors.",
+          "time": "20min",
+          "type": "speak"
+        },
+        {
+          "name": "Shadow native-speed podcast (InnerFrench B2)",
+          "description": "Entire episode. Focus on natural rhythm and liaison.",
+          "time": "25min",
+          "type": "speak"
+        },
+        {
+          "name": "DELF B2 oral exam practice (monologue)",
+          "description": "Pick a topic, prepare 3min, speak for 5min without notes.",
+          "time": "20min",
+          "type": "speak"
+        },
+        {
+          "name": "Debate with yourself: take opposing positions",
+          "description": "Record 3min for each side of a controversial topic.",
+          "time": "18min",
+          "type": "speak"
+        }
+      ]
+    },
+    
+    "reading": {
+      "A2": [
+        {
+          "name": "Read short RFI article (A2 level)",
+          "description": "Journal en français facile. Read twice, note 5 unknown words.",
+          "time": "12min",
+          "type": "read",
+          "url": "https://savoirs.rfi.fr/fr"
+        },
+        {
+          "name": "Read Clémence dialogue from A2 lessons",
+          "description": "Pick any dialogue. Read out loud, then write a summary.",
+          "time": "15min",
+          "type": "read"
+        },
+        {
+          "name": "Read short story from Clémence A2 Stories",
+          "description": "Absorb naturally. Don't look up every word.",
+          "time": "20min",
+          "type": "read"
+        }
+      ],
+      "B1": [
+        {
+          "name": "Read Le Monde article (simplified version)",
+          "description": "Pick a topic you care about. Take notes on main ideas.",
+          "time": "15min",
+          "type": "read",
+          "url": "https://www.lemonde.fr"
+        },
+        {
+          "name": "Read InnerFrench transcript",
+          "description": "Pick an episode you've already listened to. Read for deeper understanding.",
+          "time": "12min",
+          "type": "read",
+          "url": "https://innerfrench.com/podcast/"
+        },
+        {
+          "name": "Read French news site (20 Minutes, HugoDécrypte)",
+          "description": "Skim headlines, read 2 full articles on topics you like.",
+          "time": "18min",
+          "type": "read",
+          "url": "https://www.20minutes.fr"
+        }
+      ],
+      "B2": [
+        {
+          "name": "Read full Le Monde or Libération article",
+          "description": "No simplification. Opinion pieces are great for B2 vocab.",
+          "time": "25min",
+          "type": "read",
+          "url": "https://www.lemonde.fr"
+        },
+        {
+          "name": "Read French literature excerpt (Clémence B2 stories)",
+          "description": "Literary French. Take your time. Analyze sentence structure.",
+          "time": "30min",
+          "type": "read"
+        },
+        {
+          "name": "Read academic/professional French article",
+          "description": "Wikipedia français, academic blogs. Formal register practice.",
+          "time": "20min",
+          "type": "read"
+        }
+      ]
+    },
+    
+    "writing": {
+      "A2": [
+        {
+          "name": "Write 5 sentences using today's grammar point",
+          "description": "From Clémence lesson. Make them personal and relevant to you.",
+          "time": "10min",
+          "type": "write"
+        },
+        {
+          "name": "Write a short message to an imaginary French friend",
+          "description": "100 words. Tell them about your day or plans.",
+          "time": "12min",
+          "type": "write"
+        },
+        {
+          "name": "Describe your home in French (100 words)",
+          "description": "Use prepositions of location. Be specific.",
+          "time": "15min",
+          "type": "write"
+        }
+      ],
+      "B1": [
+        {
+          "name": "Write 100-word journal entry",
+          "description": "Mix of tenses. Describe something that happened + your feelings about it.",
+          "time": "12min",
+          "type": "write"
+        },
+        {
+          "name": "Write a short opinion piece (150 words)",
+          "description": "Pick a topic. Introduction, 2 arguments, conclusion. Use connectors.",
+          "time": "18min",
+          "type": "write"
+        },
+        {
+          "name": "Write a formal email (150 words)",
+          "description": "Request information, complain about something, or apply for something.",
+          "time": "15min",
+          "type": "write"
+        }
+      ],
+      "B2": [
+        {
+          "name": "Write 200-word opinion essay",
+          "description": "Formal register. Use discourse markers: toutefois, néanmoins, en outre.",
+          "time": "25min",
+          "type": "write"
+        },
+        {
+          "name": "DELF B2 writing practice: essay",
+          "description": "Take a past DELF B2 writing prompt. 250 words. Timed.",
+          "time": "30min",
+          "type": "write"
+        },
+        {
+          "name": "Write a detailed response to a debate topic",
+          "description": "Present both sides, then your position. 300 words.",
+          "time": "35min",
+          "type": "write"
+        }
+      ]
+    },
+    
+    "clemence": {
+      "A2": [
+        {
+          "name": "Clémence A2 lesson + detailed notes",
+          "description": "Watch, pause frequently, write down 5 key points + 3 example sentences.",
+          "time": "20min",
+          "type": "clemence",
+          "url": "https://www.learnfrenchwithclemence.com"
+        },
+        {
+          "name": "Clémence A2 dialogue practice",
+          "description": "Pick a dialogue. Listen 3x, then write your own similar dialogue.",
+          "time": "18min",
+          "type": "clemence",
+          "url": "https://www.learnfrenchwithclemence.com"
+        },
+        {
+          "name": "Review past Clémence A2 lesson + do all quizzes",
+          "description": "Spaced repetition. Revisit a lesson from 1-2 weeks ago.",
+          "time": "25min",
+          "type": "clemence",
+          "url": "https://www.learnfrenchwithclemence.com"
+        }
+      ],
+      "B1": [
+        {
+          "name": "Clémence B1 lesson + practice exercises",
+          "description": "Watch lesson, take notes, then create your own 5 practice sentences.",
+          "time": "25min",
+          "type": "clemence",
+          "url": "https://www.learnfrenchwithclemence.com"
+        },
+        {
+          "name": "Clémence B1 complex grammar deep dive",
+          "description": "Subjunctive, conditional, plus-que-parfait. Watch + create 10 examples.",
+          "time": "30min",
+          "type": "clemence",
+          "url": "https://www.learnfrenchwithclemence.com"
+        },
+        {
+          "name": "Clémence listening comprehension (B1)",
+          "description": "Do a B1 listening exercise. Check answers, review mistakes.",
+          "time": "20min",
+          "type": "clemence",
+          "url": "https://www.learnfrenchwithclemence.com"
+        }
+      ],
+      "B2": [
+        {
+          "name": "Clémence B2 lesson + advanced application",
+          "description": "Watch lesson, then write a 200-word paragraph using the grammar point.",
+          "time": "35min",
+          "type": "clemence",
+          "url": "https://www.learnfrenchwithclemence.com"
+        },
+        {
+          "name": "Clémence B2 discourse markers lesson",
+          "description": "Focus on essay-level connectors. Write a formal paragraph using 10+ markers.",
+          "time": "30min",
+          "type": "clemence",
+          "url": "https://www.learnfrenchwithclemence.com"
+        },
+        {
+          "name": "Clémence DELF B2 prep module",
+          "description": "Exam-specific strategies and practice.",
+          "time": "40min",
+          "type": "clemence",
+          "url": "https://www.learnfrenchwithclemence.com"
+        }
+      ]
+    }
+  },
+  
+  "taskTemplates": {
+    "MUST": ["anki", "clemence"],
+    "SHOULD": ["listening", "speaking"],
+    "BONUS": ["reading", "writing"]
+  }
+}

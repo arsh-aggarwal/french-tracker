@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>French B2 Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <span class="theme-icon">🌙</span>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="flag-emoji">🇫🇷</div>
+      <h1>Your French System</h1>
+      <p>One year to B2 · Progress tracked · No decisions needed</p>
+    </header>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid" id="stats">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-streak">0</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">Total Tasks</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-today">0%</div>
+        <div class="stat-label">Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-level">A2</div>
+        <div class="stat-label">Current Level</div>
+      </div>
+    </div>
+
+    <!-- Phase Banner -->
+    <div class="phase-banner" id="phaseBanner">
+      <div class="phase-header">
+        <span class="phase-badge">A2</span>
+        <span class="phase-title">Loading...</span>
+      </div>
+      <div class="phase-description">Initializing your learning plan...</div>
+    </div>
+
+    <!-- Tasks Section -->
+    <div class="tasks-wrapper">
+      <div class="section-header">
+        <h2>Today's Tasks</h2>
+        <button class="refresh-btn" id="refreshBtn">
+          <span>🔄</span>
+          <span>New Tasks</span>
+        </button>
+      </div>
+      <div id="tasksContainer"></div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="footer-actions">
+      <button class="btn btn-secondary" id="resetBtn">Reset Progress</button>
+      <button class="btn btn-secondary" id="exportBtn">Export Data</button>
+    </div>
+
+    <!-- Version info -->
+    <div class="version-info">
+      <p>v2.0 · Modular Architecture</p>
+    </div>
+  </div>
+
+  <!-- Celebration Modal -->
+  <div class="celebration" id="celebration">
+    <div class="celebration-icon">🎉</div>
+    <h3>Nice work!</h3>
+    <p>Every task counts. Keep showing up.</p>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <p>Loading your progress...</p>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  
+  <!-- App Script -->
+  <script src="app.js"></script>
+</body>
+</html>
