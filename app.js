@@ -3,12 +3,12 @@
 // ========================================
 
 const firebaseConfig = {
-  apiKey: "REPLACE_WITH_YOUR_API_KEY",
-  authDomain: "REPLACE_ME.firebaseapp.com",
-  projectId: "REPLACE_ME",
-  storageBucket: "REPLACE_ME.appspot.com",
-  messagingSenderId: "REPLACE_ME",
-  appId: "REPLACE_ME"
+  apiKey: "AIzaSyBBPElVsQPgp0_9o8C8dWvGfIGKLu8MA-Y",
+  authDomain: "french-tracker.firebaseapp.com",
+  projectId: "french-tracker",
+  storageBucket: "french-tracker.firebasestorage.app",
+  messagingSenderId: "31491643896",
+  appId: "1:31491643896:web:9c24206476855d00c19e0d"
 };
 
 // Initialize Firebase
