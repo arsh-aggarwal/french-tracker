@@ -3,18 +3,17 @@
 // ========================================
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBBPElVsQPgp0_9o8C8dWvGfIGKLu8MA-Y",
-  authDomain: "french-tracker.firebaseapp.com",
-  projectId: "french-tracker",
-  storageBucket: "french-tracker.firebasestorage.app",
-  messagingSenderId: "31491643896",
-  appId: "1:31491643896:web:9c24206476855d00c19e0d"
+  apiKey: "REPLACE_WITH_YOUR_API_KEY",
+  authDomain: "REPLACE_ME.firebaseapp.com",
+  projectId: "REPLACE_ME",
+  storageBucket: "REPLACE_ME.appspot.com",
+  messagingSenderId: "REPLACE_ME",
+  appId: "REPLACE_ME"
 };
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const storage = firebase.storage();
 
 // ========================================
 // STATE MANAGEMENT
@@ -121,22 +120,17 @@ function toggleTheme() {
 
 async function loadTasksConfig() {
   try {
-    // Try to load from Firebase Storage first
-    const storageRef = storage.ref('tasks.json');
-    const url = await storageRef.getDownloadURL();
-    const response = await fetch(url);
-    tasksConfig = await response.json();
-    console.log('Loaded tasks from Firebase Storage');
-  } catch (error) {
-    // Fallback to local tasks.json
-    try {
-      const response = await fetch('tasks.json');
-      tasksConfig = await response.json();
-      console.log('Loaded tasks from local file');
-    } catch (localError) {
-      console.error('Failed to load tasks configuration:', localError);
-      alert('Failed to load tasks configuration. Please check your setup.');
+    // Load from local tasks.json file
+    const response = await fetch('tasks.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    tasksConfig = await response.json();
+    console.log('Loaded tasks configuration successfully');
+  } catch (error) {
+    console.error('Failed to load tasks configuration:', error);
+    alert('Failed to load tasks.json. Make sure the file is in the same directory as index.html');
+    throw error;
   }
 }
 
