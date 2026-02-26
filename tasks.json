@@ -1,473 +1,397 @@
 {
+  "systemPhilosophy": {
+    "core": "35 minutes daily. Non-negotiable. This IS your streak.",
+    "rotation": "Weekly variety. Recommended but optional. Does NOT affect streak.",
+    "bonus": "High energy only. No guilt if skipped.",
+    "principle": "Consistency beats intensity. Survive > Optimize."
+  },
+
+  "dailyCore": {
+    "description": "Complete ALL 4 tasks = 1 streak day. Total: ~35 minutes.",
+    "streakDepends": true,
+    "A2": [
+      {
+        "id": "pimsleur",
+        "name": "Pimsleur Audio Lesson",
+        "description": "Play first thing in the morning. Speak out loud. No skipping. The tracker will tell you which lesson.",
+        "time": "20min",
+        "type": "pimsleur",
+        "mandatory": true,
+        "order": 1,
+        "autoProgress": true,
+        "currentLesson": 16,
+        "totalLessons": 150,
+        "units": [
+          { "unit": 1, "lessons": 30 },
+          { "unit": 2, "lessons": 30 },
+          { "unit": 3, "lessons": 30 },
+          { "unit": 4, "lessons": 30 },
+          { "unit": 5, "lessons": 30 }
+        ]
+      },
+      {
+        "id": "anki-review",
+        "name": "Anki Review (Review Only)",
+        "description": "Any deck. NO adding new cards. Stop at 10 minutes even if unfinished.",
+        "time": "10min",
+        "type": "anki",
+        "mandatory": true,
+        "order": 2,
+        "instruction": "Reviews only. Timer stops you at 10min."
+      },
+      {
+        "id": "podcast-chunk",
+        "name": "3-Minute Podcast Segment",
+        "description": "Listen to ONLY 3 minutes. Do not pause. Continue tomorrow from where you stopped.",
+        "time": "3min",
+        "type": "listen",
+        "mandatory": true,
+        "order": 3,
+        "sources": [
+          {
+            "name": "Simply French Podcast A2",
+            "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c",
+            "level": "A2"
+          },
+          {
+            "name": "InnerFrench (slow episodes)",
+            "url": "https://innerfrench.com/podcast/",
+            "level": "A2"
+          }
+        ],
+        "instruction": "Pick ONE source. Use same episode all week. Advance 3 min each day."
+      },
+      {
+        "id": "oral-summary",
+        "name": "2-Minute Oral Summary",
+        "description": "Summarize what you understood. Use: 'C'était sur...', 'J'ai compris que...', 'Il/Elle a dit que...'",
+        "time": "2min",
+        "type": "speak",
+        "mandatory": true,
+        "order": 4,
+        "instruction": "Record yourself OR speak to mirror. Don't overthink."
+      }
+    ],
+    "B1": [
+      {
+        "id": "pimsleur",
+        "name": "Pimsleur Audio Lesson",
+        "description": "Continue your progression. Currently completing Units 1-5.",
+        "time": "20min",
+        "type": "pimsleur",
+        "mandatory": true,
+        "order": 1,
+        "autoProgress": true,
+        "currentLesson": 16,
+        "totalLessons": 150
+      },
+      {
+        "id": "anki-review",
+        "name": "Anki Review (Review Only)",
+        "description": "B1 deck. Reviews only. 10 minute cap.",
+        "time": "10min",
+        "type": "anki",
+        "mandatory": true,
+        "order": 2
+      },
+      {
+        "id": "podcast-chunk",
+        "name": "5-Minute Podcast Segment",
+        "description": "Increased to 5 minutes at B1. Same rules.",
+        "time": "5min",
+        "type": "listen",
+        "mandatory": true,
+        "order": 3,
+        "sources": [
+          {
+            "name": "InnerFrench (normal speed)",
+            "url": "https://innerfrench.com/podcast/",
+            "level": "B1"
+          },
+          {
+            "name": "Simply French B1",
+            "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c",
+            "level": "B1"
+          }
+        ]
+      },
+      {
+        "id": "oral-summary",
+        "name": "3-Minute Oral Summary",
+        "description": "Longer summary at B1. Add your opinion.",
+        "time": "3min",
+        "type": "speak",
+        "mandatory": true,
+        "order": 4
+      }
+    ],
+    "B2": [
+      {
+        "id": "pimsleur",
+        "name": "Pimsleur Review Cycle",
+        "description": "You've finished the main units. Review random lessons from Units 3-5.",
+        "time": "20min",
+        "type": "pimsleur",
+        "mandatory": true,
+        "order": 1,
+        "autoProgress": false,
+        "instruction": "Random review mode"
+      },
+      {
+        "id": "anki-review",
+        "name": "Anki Review (B2 deck)",
+        "description": "Reviews only. 12 minute cap at B2.",
+        "time": "12min",
+        "type": "anki",
+        "mandatory": true,
+        "order": 2
+      },
+      {
+        "id": "podcast-chunk",
+        "name": "5-Minute Native Podcast",
+        "description": "Full-speed French. No subtitles.",
+        "time": "5min",
+        "type": "listen",
+        "mandatory": true,
+        "order": 3,
+        "sources": [
+          {
+            "name": "France Culture",
+            "url": "https://www.radiofrance.fr/franceculture",
+            "level": "B2"
+          },
+          {
+            "name": "Le Monde podcasts",
+            "url": "https://www.lemonde.fr/podcasts/",
+            "level": "B2"
+          }
+        ]
+      },
+      {
+        "id": "oral-summary",
+        "name": "3-Minute Detailed Summary",
+        "description": "Full summary with opinion and analysis.",
+        "time": "3min",
+        "type": "speak",
+        "mandatory": true,
+        "order": 4
+      }
+    ]
+  },
+
+  "weeklyRotation": {
+    "description": "One task per day. Optional but recommended. Does NOT affect streak.",
+    "streakDepends": false,
+    "schedule": {
+      "Monday": {
+        "task": "Read 1 paragraph from any French text aloud",
+        "time": "10min",
+        "type": "read",
+        "sources": ["RFI article", "Clémence dialogue", "Any French book"],
+        "instruction": "Focus on pronunciation. Re-read 3 times."
+      },
+      "Tuesday": {
+        "task": "Prep for friend session (if happening)",
+        "time": "10min",
+        "type": "write",
+        "instruction": "Write 3 topics you want to discuss + 5 key words for each.",
+        "note": "If no friend session this week, write 5 sentences about your day instead."
+      },
+      "Wednesday": {
+        "task": "Clémence lesson (any level)",
+        "time": "20min",
+        "type": "clemence",
+        "url": "https://www.learnfrenchwithclemence.com",
+        "instruction": "Watch lesson. Take notes. That's it. No exercises required."
+      },
+      "Thursday": {
+        "task": "Write 5 simple sentences",
+        "time": "10min",
+        "type": "write",
+        "instruction": "Use today's Pimsleur lesson vocabulary. Keep it simple."
+      },
+      "Friday": {
+        "task": "Shadow 1 minute of this week's podcast",
+        "time": "10min",
+        "type": "speak",
+        "instruction": "Pick any 1-minute segment. Repeat 5-10 times. Mimic exactly."
+      },
+      "Saturday": {
+        "task": "Extended listening (optional)",
+        "time": "15min",
+        "type": "listen",
+        "instruction": "Continue this week's podcast OR start a new one. No summary required."
+      },
+      "Sunday": {
+        "task": "Rest / Catch-up / French exposure",
+        "time": "flexible",
+        "type": "flexible",
+        "options": [
+          "Watch French movie/show with subtitles",
+          "Catch up on missed weekly tasks",
+          "Review this week's Pimsleur lessons",
+          "Literally nothing (rest day)"
+        ]
+      }
+    }
+  },
+
+  "bonusTasks": {
+    "description": "High energy only. Add these AFTER completing dailyCore + weekly task.",
+    "streakDepends": false,
+    "conditions": "Only do these if you WANT to. Never out of guilt.",
+    "available": {
+      "extendPodcast": {
+        "name": "Extend podcast from 3min → 6min",
+        "time": "+3min",
+        "type": "listen"
+      },
+      "clemenceLesson": {
+        "name": "Full Clémence lesson + exercises",
+        "time": "25-30min",
+        "type": "clemence",
+        "url": "https://www.learnfrenchwithclemence.com"
+      },
+      "shadowingPractice": {
+        "name": "1-minute shadowing exercise",
+        "time": "10min",
+        "type": "speak",
+        "instruction": "Take any 1-min segment. Shadow 10 times."
+      },
+      "ankiNewCards": {
+        "name": "Add 5 new Anki cards",
+        "time": "5min",
+        "type": "anki",
+        "instruction": "ONLY if you want to. Not required."
+      },
+      "goFluentExercise": {
+        "name": "GoFluent exercise",
+        "time": "15min",
+        "type": "gofluent",
+        "availableFrom": "B1",
+        "instruction": "Use sparingly. You have limited access."
+      },
+      "readingPractice": {
+        "name": "Read full RFI or Le Monde article",
+        "time": "15-20min",
+        "type": "read",
+        "sources": {
+          "A2": "https://savoirs.rfi.fr/fr",
+          "B1": "https://www.20minutes.fr",
+          "B2": "https://www.lemonde.fr"
+        }
+      },
+      "writingPractice": {
+        "name": "Write 100-word paragraph",
+        "time": "15min",
+        "type": "write",
+        "instruction": "Journal entry OR opinion on a topic."
+      }
+    }
+  },
+
+  "resources": {
+    "pimsleur": {
+      "description": "Your morning anchor. Auto-progresses daily.",
+      "structure": "5 units × 30 lessons = 150 total lessons",
+      "currentProgress": 16,
+      "url": "Your Pimsleur app/audio files",
+      "instruction": "Listen while making coffee, during commute, or first thing. Must speak out loud."
+    },
+    "anki": {
+      "description": "Reviews only. No new cards in dailyCore.",
+      "recommendation": "Use Clémence vocab deck OR core 2000 French deck",
+      "timeCap": {
+        "A2": "10min",
+        "B1": "10min",
+        "B2": "12min"
+      }
+    },
+    "podcasts": {
+      "A2": [
+        "Simply French Podcast A2",
+        "InnerFrench (slow)",
+        "Français Facile"
+      ],
+      "B1": [
+        "InnerFrench (normal)",
+        "Simply French B1",
+        "Easy French"
+      ],
+      "B2": [
+        "France Culture",
+        "Le Monde podcasts",
+        "InnerFrench advanced"
+      ],
+      "instruction": "Pick ONE. Stick with same episode all week. Advance 3-5 min per day."
+    },
+    "clemence": {
+      "description": "Moved to Wednesday weekly rotation. NOT daily.",
+      "url": "https://www.learnfrenchwithclemence.com",
+      "instruction": "One lesson per week is enough. Quality > quantity."
+    },
+    "gofluent": {
+      "description": "Limited access from employer. Use strategically.",
+      "availableFrom": "B1",
+      "recommendation": "Use once per week max. Save for specific grammar questions or speaking practice.",
+      "instruction": "Don't waste it on things you can get free elsewhere."
+    }
+  },
+
   "phases": [
     {
       "id": "phase1",
       "name": "Absorption Phase",
       "level": "A2",
       "months": "1-4",
-      "description": "Building mental maps through repetition. Focus: listening + Anki + basic output."
+      "description": "Focus: Input + consistency. Build the daily habit. Pimsleur + listening foundation.",
+      "goals": [
+        "Complete Pimsleur Units 1-2 (60 lessons)",
+        "Establish unbreakable 35-min daily core",
+        "Build basic speaking confidence"
+      ]
     },
     {
       "id": "phase2",
       "name": "Volume Phase",
       "level": "B1",
       "months": "5-8",
-      "description": "Massive input. Transition to native content. Build speaking confidence."
+      "description": "Focus: Increase input volume. Transition to native content. Weekly writing kicks in.",
+      "goals": [
+        "Complete Pimsleur Units 3-4 (60 lessons)",
+        "Handle conversations with Tuesday friend",
+        "Read news without overwhelming difficulty"
+      ]
     },
     {
       "id": "phase3",
       "name": "Output Phase",
       "level": "B2",
       "months": "9-12",
-      "description": "Active production. B2 exam prep. Make everything automatic."
+      "description": "Focus: Active production. DELF B2 prep. Speaking and writing volume increases.",
+      "goals": [
+        "Complete Pimsleur Unit 5 + reviews",
+        "Pass DELF B2 (or genuine B2 proficiency)",
+        "Handle complex conversations confidently"
+      ]
     }
   ],
-  
-  "resources": {
-    "anki": {
-      "A2": [
-        {
-          "name": "Anki: Review all due cards",
-          "description": "Don't skip. This is muscle memory building. Focus on A2 vocabulary.",
-          "time": "10min",
-          "type": "anki"
-        },
-        {
-          "name": "Anki: Add 5 new A2 cards from Clémence",
-          "description": "Pick 5 words/phrases from recent Clémence lessons. Include example sentences.",
-          "time": "5min",
-          "type": "anki"
-        },
-        {
-          "name": "Anki: Review + 5 new cards (A2 connectors)",
-          "description": "Donc, alors, puis, ensuite, enfin — linking words for storytelling.",
-          "time": "10min",
-          "type": "anki"
-        }
-      ],
-      "B1": [
-        {
-          "name": "Anki: Review all due cards",
-          "description": "Focus on B1 subjunctive triggers and conditionals. Don't rush.",
-          "time": "12min",
-          "type": "anki"
-        },
-        {
-          "name": "Anki: Add 5 new B1 cards (subjunctive/conditional)",
-          "description": "Il faut que, bien que, pour que... Add verb conjugations + examples.",
-          "time": "8min",
-          "type": "anki"
-        },
-        {
-          "name": "Anki: Review + 10 new B1 vocabulary cards",
-          "description": "Advanced vocabulary from InnerFrench or Clémence B1 lessons.",
-          "time": "15min",
-          "type": "anki"
-        }
-      ],
-      "B2": [
-        {
-          "name": "Anki: Review all due cards",
-          "description": "B2 vocab consolidation. Focus on formal register and discourse markers.",
-          "time": "15min",
-          "type": "anki"
-        },
-        {
-          "name": "Anki: Add 10 new B2 cards (advanced connectors)",
-          "description": "Cependant, néanmoins, par ailleurs, en outre — essay-level connectors.",
-          "time": "10min",
-          "type": "anki"
-        },
-        {
-          "name": "Anki: Review B2 idioms and expressions",
-          "description": "Focus on natural-sounding phrases and collocations.",
-          "time": "12min",
-          "type": "anki"
-        }
-      ]
-    },
-    
-    "listening": {
-      "A2": [
-        {
-          "name": "Simply French Podcast A2 episode",
-          "description": "Pick any A2 episode. Listen twice — first for gist, second for details.",
-          "time": "15min",
-          "type": "listen",
-          "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c"
-        },
-        {
-          "name": "InnerFrench slow episode (beginner)",
-          "description": "Hugo speaks slowly. Just absorb — don't translate everything.",
-          "time": "15min",
-          "type": "listen",
-          "url": "https://innerfrench.com/podcast/"
-        },
-        {
-          "name": "Easy French street interviews (A2 level)",
-          "description": "Real conversations with French subtitles. Note 5 new words.",
-          "time": "12min",
-          "type": "listen",
-          "url": "https://www.youtube.com/@easyfrench"
-        },
-        {
-          "name": "Français Facile news segment",
-          "description": "News in simplified French. Current events at manageable speed.",
-          "time": "10min",
-          "type": "listen",
-          "url": "https://savoirs.rfi.fr/fr/apprendre-enseigner/langue-francaise/journal-en-francais-facile"
-        }
-      ],
-      "B1": [
-        {
-          "name": "InnerFrench B1 episode (normal speed)",
-          "description": "Normal speed. Take notes on 5 new words + their context.",
-          "time": "20min",
-          "type": "listen",
-          "url": "https://innerfrench.com/podcast/"
-        },
-        {
-          "name": "Simply French Podcast B1 episode",
-          "description": "Intermediate level. Listen without subtitles first, then with.",
-          "time": "18min",
-          "type": "listen",
-          "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c"
-        },
-        {
-          "name": "Easy French street interviews",
-          "description": "Real French, unscripted. Use French subtitles if needed.",
-          "time": "15min",
-          "type": "listen",
-          "url": "https://www.youtube.com/@easyfrench"
-        },
-        {
-          "name": "RFI news in slow French",
-          "description": "Current events at manageable speed. Great for real-world vocabulary.",
-          "time": "15min",
-          "type": "listen",
-          "url": "https://savoirs.rfi.fr/fr"
-        }
-      ],
-      "B2": [
-        {
-          "name": "InnerFrench B2 episode (advanced topics)",
-          "description": "Complex topics. No English support. Take notes in French.",
-          "time": "25min",
-          "type": "listen",
-          "url": "https://innerfrench.com/podcast/"
-        },
-        {
-          "name": "France Culture podcast episode",
-          "description": "Native-speed, intellectual discussions. Push your limits.",
-          "time": "20min",
-          "type": "listen",
-          "url": "https://www.radiofrance.fr/franceculture"
-        },
-        {
-          "name": "Le Monde news podcast",
-          "description": "Real news for French people. No simplification.",
-          "time": "20min",
-          "type": "listen",
-          "url": "https://www.lemonde.fr/podcasts/"
-        },
-        {
-          "name": "Simply French B2 conversation",
-          "description": "Advanced discussions on current topics.",
-          "time": "18min",
-          "type": "listen",
-          "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c"
-        }
-      ]
-    },
-    
-    "speaking": {
-      "A2": [
-        {
-          "name": "Record yourself: describe your day (2 minutes)",
-          "description": "Talk out loud. Don't stop to think. Use present + passé composé.",
-          "time": "10min",
-          "type": "speak"
-        },
-        {
-          "name": "Shadow 10 sentences from last Clémence lesson",
-          "description": "Repeat out loud 10x each. Mimic pronunciation exactly.",
-          "time": "10min",
-          "type": "speak"
-        },
-        {
-          "name": "Shadow a Simply French A2 episode you already heard",
-          "description": "Full episode shadowing. Pause and repeat each sentence.",
-          "time": "15min",
-          "type": "speak"
-        },
-        {
-          "name": "Practice introducing yourself (3 different ways)",
-          "description": "Formal, informal, professional. Record all three.",
-          "time": "12min",
-          "type": "speak"
-        }
-      ],
-      "B1": [
-        {
-          "name": "Prep 3 topics for imaginary conversation",
-          "description": "What would you talk about with a French friend? Write key vocab, then speak for 2min on each topic.",
-          "time": "15min",
-          "type": "speak"
-        },
-        {
-          "name": "Shadow InnerFrench episode you've already heard",
-          "description": "Full episode. Focus on intonation patterns.",
-          "time": "20min",
-          "type": "speak"
-        },
-        {
-          "name": "Record yourself: tell a story from your week",
-          "description": "5 minutes. Use imparfait for description, passé composé for events.",
-          "time": "15min",
-          "type": "speak"
-        },
-        {
-          "name": "Practice giving your opinion on 3 topics",
-          "description": "Pick: télétravail, réseaux sociaux, écologie. 2min each. Use 'Je pense que..., à mon avis...'",
-          "time": "15min",
-          "type": "speak"
-        }
-      ],
-      "B2": [
-        {
-          "name": "Record 5min opinion piece on a complex topic",
-          "description": "Pick: immigration, AI, climate change. Argue BOTH sides. Use formal connectors.",
-          "time": "20min",
-          "type": "speak"
-        },
-        {
-          "name": "Shadow native-speed podcast (InnerFrench B2)",
-          "description": "Entire episode. Focus on natural rhythm and liaison.",
-          "time": "25min",
-          "type": "speak"
-        },
-        {
-          "name": "DELF B2 oral exam practice (monologue)",
-          "description": "Pick a topic, prepare 3min, speak for 5min without notes.",
-          "time": "20min",
-          "type": "speak"
-        },
-        {
-          "name": "Debate with yourself: take opposing positions",
-          "description": "Record 3min for each side of a controversial topic.",
-          "time": "18min",
-          "type": "speak"
-        }
-      ]
-    },
-    
-    "reading": {
-      "A2": [
-        {
-          "name": "Read short RFI article (A2 level)",
-          "description": "Journal en français facile. Read twice, note 5 unknown words.",
-          "time": "12min",
-          "type": "read",
-          "url": "https://savoirs.rfi.fr/fr"
-        },
-        {
-          "name": "Read Clémence dialogue from A2 lessons",
-          "description": "Pick any dialogue. Read out loud, then write a summary.",
-          "time": "15min",
-          "type": "read"
-        },
-        {
-          "name": "Read short story from Clémence A2 Stories",
-          "description": "Absorb naturally. Don't look up every word.",
-          "time": "20min",
-          "type": "read"
-        }
-      ],
-      "B1": [
-        {
-          "name": "Read Le Monde article (simplified version)",
-          "description": "Pick a topic you care about. Take notes on main ideas.",
-          "time": "15min",
-          "type": "read",
-          "url": "https://www.lemonde.fr"
-        },
-        {
-          "name": "Read InnerFrench transcript",
-          "description": "Pick an episode you've already listened to. Read for deeper understanding.",
-          "time": "12min",
-          "type": "read",
-          "url": "https://innerfrench.com/podcast/"
-        },
-        {
-          "name": "Read French news site (20 Minutes, HugoDécrypte)",
-          "description": "Skim headlines, read 2 full articles on topics you like.",
-          "time": "18min",
-          "type": "read",
-          "url": "https://www.20minutes.fr"
-        }
-      ],
-      "B2": [
-        {
-          "name": "Read full Le Monde or Libération article",
-          "description": "No simplification. Opinion pieces are great for B2 vocab.",
-          "time": "25min",
-          "type": "read",
-          "url": "https://www.lemonde.fr"
-        },
-        {
-          "name": "Read French literature excerpt (Clémence B2 stories)",
-          "description": "Literary French. Take your time. Analyze sentence structure.",
-          "time": "30min",
-          "type": "read"
-        },
-        {
-          "name": "Read academic/professional French article",
-          "description": "Wikipedia français, academic blogs. Formal register practice.",
-          "time": "20min",
-          "type": "read"
-        }
-      ]
-    },
-    
-    "writing": {
-      "A2": [
-        {
-          "name": "Write 5 sentences using today's grammar point",
-          "description": "From Clémence lesson. Make them personal and relevant to you.",
-          "time": "10min",
-          "type": "write"
-        },
-        {
-          "name": "Write a short message to an imaginary French friend",
-          "description": "100 words. Tell them about your day or plans.",
-          "time": "12min",
-          "type": "write"
-        },
-        {
-          "name": "Describe your home in French (100 words)",
-          "description": "Use prepositions of location. Be specific.",
-          "time": "15min",
-          "type": "write"
-        }
-      ],
-      "B1": [
-        {
-          "name": "Write 100-word journal entry",
-          "description": "Mix of tenses. Describe something that happened + your feelings about it.",
-          "time": "12min",
-          "type": "write"
-        },
-        {
-          "name": "Write a short opinion piece (150 words)",
-          "description": "Pick a topic. Introduction, 2 arguments, conclusion. Use connectors.",
-          "time": "18min",
-          "type": "write"
-        },
-        {
-          "name": "Write a formal email (150 words)",
-          "description": "Request information, complain about something, or apply for something.",
-          "time": "15min",
-          "type": "write"
-        }
-      ],
-      "B2": [
-        {
-          "name": "Write 200-word opinion essay",
-          "description": "Formal register. Use discourse markers: toutefois, néanmoins, en outre.",
-          "time": "25min",
-          "type": "write"
-        },
-        {
-          "name": "DELF B2 writing practice: essay",
-          "description": "Take a past DELF B2 writing prompt. 250 words. Timed.",
-          "time": "30min",
-          "type": "write"
-        },
-        {
-          "name": "Write a detailed response to a debate topic",
-          "description": "Present both sides, then your position. 300 words.",
-          "time": "35min",
-          "type": "write"
-        }
-      ]
-    },
-    
-    "clemence": {
-      "A2": [
-        {
-          "name": "Clémence A2 lesson + detailed notes",
-          "description": "Watch, pause frequently, write down 5 key points + 3 example sentences.",
-          "time": "20min",
-          "type": "clemence",
-          "url": "https://www.learnfrenchwithclemence.com"
-        },
-        {
-          "name": "Clémence A2 dialogue practice",
-          "description": "Pick a dialogue. Listen 3x, then write your own similar dialogue.",
-          "time": "18min",
-          "type": "clemence",
-          "url": "https://www.learnfrenchwithclemence.com"
-        },
-        {
-          "name": "Review past Clémence A2 lesson + do all quizzes",
-          "description": "Spaced repetition. Revisit a lesson from 1-2 weeks ago.",
-          "time": "25min",
-          "type": "clemence",
-          "url": "https://www.learnfrenchwithclemence.com"
-        }
-      ],
-      "B1": [
-        {
-          "name": "Clémence B1 lesson + practice exercises",
-          "description": "Watch lesson, take notes, then create your own 5 practice sentences.",
-          "time": "25min",
-          "type": "clemence",
-          "url": "https://www.learnfrenchwithclemence.com"
-        },
-        {
-          "name": "Clémence B1 complex grammar deep dive",
-          "description": "Subjunctive, conditional, plus-que-parfait. Watch + create 10 examples.",
-          "time": "30min",
-          "type": "clemence",
-          "url": "https://www.learnfrenchwithclemence.com"
-        },
-        {
-          "name": "Clémence listening comprehension (B1)",
-          "description": "Do a B1 listening exercise. Check answers, review mistakes.",
-          "time": "20min",
-          "type": "clemence",
-          "url": "https://www.learnfrenchwithclemence.com"
-        }
-      ],
-      "B2": [
-        {
-          "name": "Clémence B2 lesson + advanced application",
-          "description": "Watch lesson, then write a 200-word paragraph using the grammar point.",
-          "time": "35min",
-          "type": "clemence",
-          "url": "https://www.learnfrenchwithclemence.com"
-        },
-        {
-          "name": "Clémence B2 discourse markers lesson",
-          "description": "Focus on essay-level connectors. Write a formal paragraph using 10+ markers.",
-          "time": "30min",
-          "type": "clemence",
-          "url": "https://www.learnfrenchwithclemence.com"
-        },
-        {
-          "name": "Clémence DELF B2 prep module",
-          "description": "Exam-specific strategies and practice.",
-          "time": "40min",
-          "type": "clemence",
-          "url": "https://www.learnfrenchwithclemence.com"
-        }
-      ]
-    }
+
+  "streakRules": {
+    "definition": "Completing ALL 4 dailyCore tasks = 1 streak day",
+    "weeklyRotation": "Does NOT affect streak",
+    "bonusTasks": "Does NOT affect streak",
+    "missedDay": "Streak resets. No guilt. Just restart.",
+    "philosophy": "Streak measures consistency, not intensity."
   },
-  
-  "taskTemplates": {
-    "MUST": ["anki", "clemence"],
-    "SHOULD": ["listening", "speaking"],
-    "BONUS": ["reading", "writing"]
+
+  "progressTracking": {
+    "pimsleur": {
+      "currentLesson": 16,
+      "lastCompleted": null,
+      "autoIncrement": true
+    },
+    "weeklyRotationCompleted": {},
+    "bonusTasksThisWeek": 0
   }
 }

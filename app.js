@@ -22,13 +22,15 @@ const db = firebase.firestore();
 let appState = {
   currentPhase: 0,
   level: 'A2',
-  tasksToday: [],
-  completed: [],
+  coreCompleted: [],
+  weeklyCompleted: {},
+  bonusCompleted: [],
   totalCompleted: 0,
   streak: 0,
   startDate: null,
   lastVisit: null,
-  theme: 'dark'
+  theme: 'dark',
+  pimsleurProgress: 16
 };
 
 let tasksConfig = null;
@@ -40,26 +42,12 @@ let tasksConfig = null;
 async function init() {
   showLoading(true);
   
-  // Load theme
   initTheme();
-  
-  // Load tasks configuration
   await loadTasksConfig();
-  
-  // Load user state
   await loadState();
   
-  // Update UI
   updatePhase();
-  
-  // Generate or render tasks
-  if (appState.tasksToday.length === 0) {
-    generateTodaysTasks();
-  } else {
-    renderTasks();
-  }
-  
-  // Setup event listeners
+  renderAll();
   setupEventListeners();
   
   showLoading(false);
@@ -79,7 +67,6 @@ function showLoading(show) {
 // ========================================
 
 function initTheme() {
-  // Check saved preference or system preference
   const savedTheme = localStorage.getItem('theme');
   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   
@@ -120,7 +107,6 @@ function toggleTheme() {
 
 async function loadTasksConfig() {
   try {
-    // Load from local tasks.json file
     const response = await fetch('tasks.json');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -152,12 +138,10 @@ function updatePhase() {
   const level = getCurrentLevel();
   appState.level = level;
   
-  // Determine phase index
   if (level === 'A2') appState.currentPhase = 0;
   else if (level === 'B1') appState.currentPhase = 1;
   else appState.currentPhase = 2;
   
-  // Update phase banner
   const phase = tasksConfig.phases[appState.currentPhase];
   const banner = document.getElementById('phaseBanner');
   
@@ -169,165 +153,218 @@ function updatePhase() {
     <div class="phase-description">${phase.description}</div>
   `;
   
-  // Update level stat
   document.getElementById('stat-level').textContent = phase.level;
 }
 
 // ========================================
-// TASK GENERATION
+// RENDER ALL SECTIONS
 // ========================================
 
-function pickRandom(array) {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
-function generateTodaysTasks() {
-  const level = appState.level;
-  const tasks = [];
-  
-  // Generate tasks for each priority band
-  Object.entries(tasksConfig.taskTemplates).forEach(([priority, taskTypes]) => {
-    taskTypes.forEach(taskType => {
-      const resourcePool = tasksConfig.resources[taskType][level];
-      if (resourcePool && resourcePool.length > 0) {
-        const resource = pickRandom(resourcePool);
-        tasks.push({
-          id: Date.now() + Math.random(),
-          priority: priority,
-          level: level,
-          ...resource
-        });
-      }
-    });
-  });
-  
-  appState.tasksToday = tasks;
-  appState.completed = [];
-  
-  renderTasks();
-  saveState();
-}
-
-// ========================================
-// TASK RENDERING
-// ========================================
-
-function renderTasks() {
-  const container = document.getElementById('tasksContainer');
-  container.innerHTML = '';
-  
-  // Group tasks by priority
-  const tasksByPriority = {
-    MUST: [],
-    SHOULD: [],
-    BONUS: []
-  };
-  
-  appState.tasksToday.forEach(task => {
-    tasksByPriority[task.priority].push(task);
-  });
-  
-  // Define priority bands
-  const priorityBands = [
-    {
-      priority: 'MUST',
-      title: 'Bare Minimum',
-      subtitle: 'Do these even on terrible days',
-      class: 'must'
-    },
-    {
-      priority: 'SHOULD',
-      title: 'Normal Day',
-      subtitle: 'Your default routine',
-      class: 'should'
-    },
-    {
-      priority: 'BONUS',
-      title: 'Extra Credit',
-      subtitle: 'When you have energy',
-      class: 'bonus'
-    }
-  ];
-  
-  // Render each priority band
-  priorityBands.forEach(band => {
-    const bandTasks = tasksByPriority[band.priority];
-    if (bandTasks.length === 0) return;
-    
-    const bandDiv = document.createElement('div');
-    bandDiv.className = 'priority-band';
-    
-    const tasksHTML = bandTasks.map(task => renderTask(task)).join('');
-    
-    bandDiv.innerHTML = `
-      <div class="band-header">
-        <div class="band-indicator ${band.class}"></div>
-        <div class="band-title">${band.title}</div>
-        <div class="band-subtitle">${band.subtitle}</div>
-      </div>
-      <div class="band-tasks">
-        ${tasksHTML}
-      </div>
-    `;
-    
-    container.appendChild(bandDiv);
-  });
-  
-  // Add click handlers to tasks
-  document.querySelectorAll('.task').forEach(taskEl => {
-    const taskId = taskEl.dataset.taskId;
-    taskEl.addEventListener('click', (e) => {
-      // Don't toggle if clicking on link
-      if (e.target.tagName === 'A') return;
-      toggleTask(taskId);
-    });
-  });
-  
+function renderAll() {
+  renderDailyCore();
+  renderWeeklyRotation();
+  renderBonusTasks();
   updateStats();
 }
 
-function renderTask(task) {
-  const completed = appState.completed.includes(task.id);
-  const linkHTML = task.url ? `<a href="${task.url}" target="_blank" class="task-link" onclick="event.stopPropagation()">🔗 Open resource</a>` : '';
+function renderDailyCore() {
+  const level = appState.level;
+  const coreTasks = tasksConfig.dailyCore[level];
   
-  return `
-    <div class="task ${completed ? 'completed' : ''}" data-task-id="${task.id}">
+  const container = document.getElementById('tasksContainer');
+  container.innerHTML = '';
+  
+  // Daily Core Section
+  const coreSection = document.createElement('div');
+  coreSection.className = 'priority-band';
+  coreSection.innerHTML = `
+    <div class="band-header">
+      <div class="band-indicator must"></div>
+      <div class="band-title">DAILY CORE (35 min)</div>
+      <div class="band-subtitle">Complete all 4 = streak day</div>
+    </div>
+    <div class="band-tasks" id="coreTasks"></div>
+  `;
+  container.appendChild(coreSection);
+  
+  const coreTasksContainer = document.getElementById('coreTasks');
+  
+  coreTasks.forEach((task, index) => {
+    const taskDiv = document.createElement('div');
+    const completed = appState.coreCompleted.includes(task.id);
+    
+    // Special handling for Pimsleur
+    let taskName = task.name;
+    if (task.id === 'pimsleur' && task.autoProgress) {
+      const lessonNum = appState.pimsleurProgress;
+      const unitNum = Math.ceil(lessonNum / 30);
+      const lessonInUnit = ((lessonNum - 1) % 30) + 1;
+      taskName = `Pimsleur Unit ${unitNum}, Lesson ${lessonInUnit}`;
+    }
+    
+    taskDiv.className = `task ${completed ? 'completed' : ''}`;
+    taskDiv.dataset.taskId = task.id;
+    taskDiv.dataset.taskType = 'core';
+    
+    const urlHTML = task.url ? `<a href="${task.url}" target="_blank" class="task-link" onclick="event.stopPropagation()">🔗 Open</a>` : '';
+    
+    taskDiv.innerHTML = `
       <div class="task-checkbox"></div>
       <div class="task-content">
-        <div class="task-title">${task.name}</div>
+        <div class="task-title">${taskName}</div>
         <div class="task-description">${task.description}</div>
-        ${linkHTML}
+        ${task.instruction ? `<div class="task-description" style="font-style: italic; margin-top: 0.3rem;">💡 ${task.instruction}</div>` : ''}
+        ${urlHTML}
         <div class="task-meta">
           <span class="task-tag tag-${task.type}">${task.type}</span>
           <span class="task-time">${task.time}</span>
         </div>
       </div>
+    `;
+    
+    taskDiv.addEventListener('click', () => toggleCoreTask(task.id));
+    coreTasksContainer.appendChild(taskDiv);
+  });
+}
+
+function renderWeeklyRotation() {
+  const container = document.getElementById('tasksContainer');
+  
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const today = days[new Date().getDay()];
+  
+  const weeklyTask = tasksConfig.weeklyRotation.schedule[today];
+  const completed = appState.weeklyCompleted[today] || false;
+  
+  const weeklySection = document.createElement('div');
+  weeklySection.className = 'priority-band';
+  weeklySection.style.marginTop = '1.5rem';
+  
+  weeklySection.innerHTML = `
+    <div class="band-header">
+      <div class="band-indicator should"></div>
+      <div class="band-title">TODAY'S WEEKLY TASK (${today})</div>
+      <div class="band-subtitle">Optional - doesn't affect streak</div>
+    </div>
+    <div class="band-tasks">
+      <div class="task ${completed ? 'completed' : ''}" data-task-id="weekly-${today}" data-task-type="weekly">
+        <div class="task-checkbox"></div>
+        <div class="task-content">
+          <div class="task-title">${weeklyTask.task}</div>
+          <div class="task-description">${weeklyTask.instruction || ''}</div>
+          ${weeklyTask.note ? `<div class="task-description" style="font-style: italic; margin-top: 0.3rem;">📌 ${weeklyTask.note}</div>` : ''}
+          ${weeklyTask.url ? `<a href="${weeklyTask.url}" target="_blank" class="task-link" onclick="event.stopPropagation()">🔗 Open</a>` : ''}
+          <div class="task-meta">
+            <span class="task-tag tag-${weeklyTask.type}">${weeklyTask.type}</span>
+            <span class="task-time">${weeklyTask.time}</span>
+          </div>
+        </div>
+      </div>
     </div>
   `;
+  
+  container.appendChild(weeklySection);
+  
+  weeklySection.querySelector('.task').addEventListener('click', () => toggleWeeklyTask(today));
+}
+
+function renderBonusTasks() {
+  const container = document.getElementById('tasksContainer');
+  
+  const bonusSection = document.createElement('div');
+  bonusSection.className = 'priority-band';
+  bonusSection.style.marginTop = '1.5rem';
+  
+  const bonusList = Object.values(tasksConfig.bonusTasks.available);
+  
+  const tasksHTML = bonusList.map(task => {
+    const completed = appState.bonusCompleted.includes(task.name);
+    return `
+      <div class="task ${completed ? 'completed' : ''}" data-task-id="${task.name}" data-task-type="bonus">
+        <div class="task-checkbox"></div>
+        <div class="task-content">
+          <div class="task-title">${task.name}</div>
+          <div class="task-description">${task.instruction || ''}</div>
+          ${task.url ? `<a href="${task.url}" target="_blank" class="task-link" onclick="event.stopPropagation()">🔗 Open</a>` : ''}
+          <div class="task-meta">
+            <span class="task-tag tag-${task.type}">${task.type}</span>
+            <span class="task-time">${task.time}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  bonusSection.innerHTML = `
+    <div class="band-header">
+      <div class="band-indicator bonus"></div>
+      <div class="band-title">BONUS TASKS (High Energy Only)</div>
+      <div class="band-subtitle">No guilt if skipped</div>
+    </div>
+    <div class="band-tasks">
+      ${tasksHTML}
+    </div>
+  `;
+  
+  container.appendChild(bonusSection);
+  
+  bonusSection.querySelectorAll('.task').forEach(taskEl => {
+    const taskId = taskEl.dataset.taskId;
+    taskEl.addEventListener('click', () => toggleBonusTask(taskId));
+  });
 }
 
 // ========================================
 // TASK INTERACTION
 // ========================================
 
-function toggleTask(taskId) {
-  const task = appState.tasksToday.find(t => t.id === taskId);
-  if (!task) return;
-  
-  const index = appState.completed.indexOf(taskId);
+function toggleCoreTask(taskId) {
+  const index = appState.coreCompleted.indexOf(taskId);
   
   if (index > -1) {
-    // Uncomplete task
-    appState.completed.splice(index, 1);
+    appState.coreCompleted.splice(index, 1);
   } else {
-    // Complete task
-    appState.completed.push(taskId);
+    appState.coreCompleted.push(taskId);
     appState.totalCompleted++;
-    showCelebration();
+    
+    // Auto-increment Pimsleur
+    if (taskId === 'pimsleur') {
+      appState.pimsleurProgress++;
+    }
+    
+    // Check if all core tasks done
+    const level = appState.level;
+    const coreTasks = tasksConfig.dailyCore[level];
+    if (appState.coreCompleted.length === coreTasks.length) {
+      showCelebration();
+    }
   }
   
   saveState();
-  renderTasks();
+  renderAll();
+}
+
+function toggleWeeklyTask(day) {
+  appState.weeklyCompleted[day] = !appState.weeklyCompleted[day];
+  if (appState.weeklyCompleted[day]) {
+    appState.totalCompleted++;
+  }
+  saveState();
+  renderAll();
+}
+
+function toggleBonusTask(taskId) {
+  const index = appState.bonusCompleted.indexOf(taskId);
+  
+  if (index > -1) {
+    appState.bonusCompleted.splice(index, 1);
+  } else {
+    appState.bonusCompleted.push(taskId);
+    appState.totalCompleted++;
+  }
+  
+  saveState();
+  renderAll();
 }
 
 function showCelebration() {
@@ -335,7 +372,7 @@ function showCelebration() {
   cel.classList.add('show');
   setTimeout(() => {
     cel.classList.remove('show');
-  }, 2000);
+  }, 2500);
 }
 
 // ========================================
@@ -351,27 +388,37 @@ function updateStats() {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     
-    if (lastVisit === yesterday.toDateString()) {
-      // Consecutive day
+    // Check if all core tasks were completed yesterday
+    const level = appState.level;
+    const coreTasks = tasksConfig.dailyCore[level];
+    const allCoreCompleted = appState.coreCompleted.length === coreTasks.length;
+    
+    if (lastVisit === yesterday.toDateString() && allCoreCompleted) {
+      // Consecutive day with all core tasks done
       appState.streak++;
-    } else if (lastVisit) {
+    } else if (lastVisit && !allCoreCompleted) {
       // Broke streak
-      appState.streak = 1;
-    } else {
+      appState.streak = 0;
+    } else if (!lastVisit) {
       // First day
-      appState.streak = 1;
+      appState.streak = 0;
     }
+    
+    // Reset daily tasks for new day
+    appState.coreCompleted = [];
+    appState.bonusCompleted = [];
     
     appState.lastVisit = new Date().toISOString();
     saveState();
   }
   
   // Calculate today's progress
-  const totalTasks = appState.tasksToday.length;
-  const completedTasks = appState.completed.length;
-  const todayPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+  const level = appState.level;
+  const coreTasks = tasksConfig.dailyCore[level];
+  const coreTotal = coreTasks.length;
+  const coreCompleted = appState.coreCompleted.length;
+  const todayPercent = coreTotal > 0 ? Math.round((coreCompleted / coreTotal) * 100) : 0;
   
-  // Update stat displays
   document.getElementById('stat-streak').textContent = appState.streak;
   document.getElementById('stat-total').textContent = appState.totalCompleted;
   document.getElementById('stat-today').textContent = todayPercent + '%';
@@ -382,26 +429,22 @@ function updateStats() {
 // ========================================
 
 async function saveState() {
-  // Save to Firestore
   try {
     await db.collection('users').doc('me').set(appState);
   } catch (error) {
     console.log('Firestore save failed, using localStorage:', error);
   }
   
-  // Always save to localStorage as backup
   localStorage.setItem('french_tracker_state', JSON.stringify(appState));
 }
 
 async function loadState() {
   try {
-    // Try Firestore first
     const doc = await db.collection('users').doc('me').get();
     if (doc.exists) {
       appState = { ...appState, ...doc.data() };
       console.log('Loaded state from Firestore');
     } else {
-      // Fallback to localStorage
       const local = localStorage.getItem('french_tracker_state');
       if (local) {
         appState = { ...appState, ...JSON.parse(local) };
@@ -416,7 +459,6 @@ async function loadState() {
     }
   }
   
-  // Initialize start date if not set
   if (!appState.startDate) {
     appState.startDate = new Date().toISOString();
     saveState();
@@ -428,16 +470,17 @@ async function loadState() {
 // ========================================
 
 function setupEventListeners() {
-  // Theme toggle
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
   
-  // Refresh tasks
-  document.getElementById('refreshBtn').addEventListener('click', generateTodaysTasks);
+  document.getElementById('refreshBtn').addEventListener('click', () => {
+    // Reset today's tasks
+    appState.coreCompleted = [];
+    appState.bonusCompleted = [];
+    saveState();
+    renderAll();
+  });
   
-  // Reset progress
   document.getElementById('resetBtn').addEventListener('click', resetProgress);
-  
-  // Export data
   document.getElementById('exportBtn').addEventListener('click', exportData);
 }
 
@@ -447,13 +490,15 @@ function resetProgress() {
   appState = {
     currentPhase: 0,
     level: 'A2',
-    tasksToday: [],
-    completed: [],
+    coreCompleted: [],
+    weeklyCompleted: {},
+    bonusCompleted: [],
     totalCompleted: 0,
     streak: 0,
     startDate: new Date().toISOString(),
     lastVisit: null,
-    theme: appState.theme
+    theme: appState.theme,
+    pimsleurProgress: 16
   };
   
   saveState();
@@ -477,7 +522,6 @@ function exportData() {
 // START APP
 // ========================================
 
-// Wait for DOM to be ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', init);
 } else {
