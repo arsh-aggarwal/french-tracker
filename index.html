@@ -47,8 +47,21 @@
       <div class="phase-description">Initializing your learning plan...</div>
     </div>
 
+    <!-- Weekly View Toggle -->
+    <div class="view-toggle">
+      <button class="view-btn active" data-view="today">Today</button>
+      <button class="view-btn" data-view="week">Week View</button>
+    </div>
+
+    <!-- Weekly Overview (Hidden by default) -->
+    <div class="weekly-overview hidden" id="weeklyOverview">
+      <div class="weekly-calendar" id="weeklyCalendar"></div>
+      <div class="weekly-stats" id="weeklyStats"></div>
+      <div class="weekly-delta" id="weeklyDelta"></div>
+    </div>
+
     <!-- Tasks Section -->
-    <div class="tasks-wrapper">
+    <div class="tasks-wrapper" id="todayView">
       <div class="section-header">
         <h2>Today's Tasks</h2>
         <button class="refresh-btn" id="refreshBtn">

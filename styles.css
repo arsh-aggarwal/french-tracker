@@ -706,6 +706,311 @@ header p {
 }
 
 /* ===================================
+   Weekly View Components
+   =================================== */
+
+.view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.6s ease 0.25s both;
+}
+
+.view-btn {
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.view-btn:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.view-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.weekly-overview {
+  margin-bottom: 2rem;
+  animation: fadeUp 0.6s ease 0.3s both;
+}
+
+.weekly-overview.hidden {
+  display: none;
+}
+
+/* Weekly Calendar */
+.weekly-calendar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.weekly-calendar h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.day-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem;
+  text-align: center;
+  transition: all var(--transition-base);
+}
+
+.day-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.day-card.today {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.day-card.completed {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--green);
+}
+
+.day-card.partial {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--yellow);
+}
+
+.day-card.missed {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: var(--border);
+  opacity: 0.6;
+}
+
+.day-name {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.day-date {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.day-progress {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.day-checkmarks {
+  display: flex;
+  gap: 0.2rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.day-check {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.day-check.done {
+  background: var(--green);
+}
+
+/* Weekly Stats Card */
+.weekly-stats {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.weekly-stats h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stats-grid-weekly {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.stat-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.stat-item-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.stat-item-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-item-detail {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+/* Weekly Delta */
+.weekly-delta {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.weekly-delta h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.delta-section {
+  margin-bottom: 1.5rem;
+}
+
+.delta-section:last-child {
+  margin-bottom: 0;
+}
+
+.delta-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+.delta-content {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.delta-list {
+  list-style: none;
+  padding: 0;
+}
+
+.delta-list li {
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.delta-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.insight-box {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.insight-box strong {
+  color: var(--yellow);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.recovery-plan {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.recovery-plan strong {
+  color: var(--green);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive Weekly View */
+@media (max-width: 768px) {
+  .week-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .day-card {
+    padding: 0.6rem;
+  }
+  
+  .day-date {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .week-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .view-toggle {
+    flex-direction: column;
+  }
+  
+  .view-btn {
+    width: 100%;
+  }
+}
+
+/* ===================================
    Responsive Design
    =================================== */
 
