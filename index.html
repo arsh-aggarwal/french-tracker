@@ -47,6 +47,20 @@
       <div class="phase-description">Initializing your learning plan...</div>
     </div>
 
+    <!-- Work Ahead Mode -->
+    <div class="work-ahead-banner" id="workAheadBanner" style="display: none;">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <span style="font-size: 1.5rem;">🚀</span>
+        <div style="flex: 1;">
+          <div style="font-weight: 600; margin-bottom: 0.2rem;">Work Ahead Mode Active</div>
+          <div style="font-size: 0.85rem; opacity: 0.8;">Completing tasks for <span id="workAheadDate"></span></div>
+        </div>
+        <button class="btn btn-secondary" onclick="exitWorkAheadMode()" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+          Back to Today
+        </button>
+      </div>
+    </div>
+
     <!-- Weekly View Toggle -->
     <div class="view-toggle">
       <button class="view-btn active" data-view="today">Today</button>
@@ -64,10 +78,16 @@
     <div class="tasks-wrapper" id="todayView">
       <div class="section-header">
         <h2>Today's Tasks</h2>
-        <button class="refresh-btn" id="refreshBtn">
-          <span>🔄</span>
-          <span>New Tasks</span>
-        </button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="refresh-btn" id="workAheadBtn">
+            <span>🚀</span>
+            <span>Work Ahead</span>
+          </button>
+          <button class="refresh-btn" id="refreshBtn">
+            <span>🔄</span>
+            <span>Refresh</span>
+          </button>
+        </div>
       </div>
       <div id="tasksContainer"></div>
     </div>
@@ -89,6 +109,28 @@
     <div class="celebration-icon">🎉</div>
     <h3>Nice work!</h3>
     <p>Every task counts. Keep showing up.</p>
+  </div>
+
+  <!-- Work Ahead Modal -->
+  <div class="celebration" id="workAheadModal" style="padding: 2rem 2.5rem; min-width: 350px;">
+    <h3 style="margin-bottom: 1.5rem;">🚀 Work Ahead Mode</h3>
+    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+      Complete Pimsleur lessons in advance for upcoming days.
+    </p>
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+      <button class="btn btn-primary" onclick="workAhead(1)" style="width: 100%;">
+        Tomorrow (Lesson <span id="lesson-tomorrow"></span>)
+      </button>
+      <button class="btn btn-primary" onclick="workAhead(2)" style="width: 100%;">
+        Day After (Lesson <span id="lesson-dayafter"></span>)
+      </button>
+      <button class="btn btn-primary" onclick="workAhead(3)" style="width: 100%;">
+        +3 Days (Lesson <span id="lesson-3days"></span>)
+      </button>
+    </div>
+    <button class="btn btn-secondary" onclick="closeWorkAheadModal()" style="width: 100%;">
+      Cancel
+    </button>
   </div>
 
   <!-- Loading Overlay -->

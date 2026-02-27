@@ -11,6 +11,7 @@ const firebaseConfig = {
   appId: "REPLACE_ME"
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -21,7 +22,6 @@ const db = firebase.firestore();
 let appState = {
   currentPhase: 0,
   level: 'A2',
-  weeklyHistory: {}, // { 'YYYY-WW': { days: {...}, stats: {...} } }
   coreCompleted: [],
   weeklyCompleted: {},
   bonusCompleted: [],
@@ -31,48 +31,13 @@ let appState = {
   lastVisit: null,
   theme: 'dark',
   pimsleurProgress: 16,
-  currentView: 'today'
+  pimsleurCompletedToday: false,
+  lastPimsleurDate: null,
+  dailyHistory: {},
+  syncStatus: 'pending'
 };
 
 let tasksConfig = null;
-
-// ========================================
-// UTILITY FUNCTIONS
-// ========================================
-
-function getWeekKey(date = new Date()) {
-  const d = new Date(date);
-  const year = d.getFullYear();
-  const week = getWeekNumber(d);
-  return `${year}-W${week.toString().padStart(2, '0')}`;
-}
-
-function getWeekNumber(d) {
-  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-  return weekNo;
-}
-
-function getWeekDates(weekKey) {
-  const [year, week] = weekKey.split('-W').map(Number);
-  const jan4 = new Date(year, 0, 4);
-  const monday = new Date(jan4);
-  monday.setDate(jan4.getDate() - (jan4.getDay() || 7) + 1 + (week - 1) * 7);
-  
-  const dates = [];
-  for (let i = 0; i < 7; i++) {
-    const date = new Date(monday);
-    date.setDate(monday.getDate() + i);
-    dates.push(date);
-  }
-  return dates;
-}
-
-function getDayKey(date = new Date()) {
-  return date.toISOString().split('T')[0];
-}
 
 // ========================================
 // INITIALIZATION
@@ -85,15 +50,11 @@ async function init() {
   await loadTasksConfig();
   await loadState();
   
+  checkNewDay();
   updatePhase();
-  
-  if (appState.currentView === 'today') {
-    renderAll();
-  } else {
-    renderWeeklyView();
-  }
-  
+  renderAll();
   setupEventListeners();
+  
   showLoading(false);
 }
 
@@ -114,7 +75,14 @@ function initTheme() {
   const savedTheme = localStorage.getItem('theme');
   const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   
-  appState.theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+  if (savedTheme) {
+    appState.theme = savedTheme;
+  } else if (systemPrefersDark) {
+    appState.theme = 'dark';
+  } else {
+    appState.theme = 'light';
+  }
+  
   applyTheme();
 }
 
@@ -124,10 +92,10 @@ function applyTheme() {
   
   if (appState.theme === 'light') {
     html.setAttribute('data-theme', 'light');
-    themeIcon.textContent = '☀️';
+    if (themeIcon) themeIcon.textContent = '☀️';
   } else {
     html.removeAttribute('data-theme');
-    themeIcon.textContent = '🌙';
+    if (themeIcon) themeIcon.textContent = '🌙';
   }
   
   localStorage.setItem('theme', appState.theme);
@@ -145,13 +113,32 @@ function toggleTheme() {
 async function loadTasksConfig() {
   try {
     const response = await fetch('tasks.json');
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     tasksConfig = await response.json();
-    console.log('Loaded tasks configuration');
+    console.log('✅ Loaded tasks configuration');
   } catch (error) {
-    console.error('Failed to load tasks:', error);
-    alert('Failed to load tasks.json');
+    console.error('❌ Failed to load tasks.json:', error);
+    alert('Failed to load tasks.json. Make sure the file is in the same directory as index.html');
     throw error;
+  }
+}
+
+// ========================================
+// NEW DAY DETECTION
+// ========================================
+
+function checkNewDay() {
+  const today = new Date().toISOString().split('T')[0];
+  const lastDate = appState.lastPimsleurDate;
+  
+  if (lastDate !== today) {
+    // New day - reset daily flags
+    appState.pimsleurCompletedToday = false;
+    appState.coreCompleted = [];
+    appState.bonusCompleted = [];
+    console.log('🌅 New day detected, resetting daily tasks');
   }
 }
 
@@ -192,31 +179,7 @@ function updatePhase() {
 }
 
 // ========================================
-// VIEW SWITCHING
-// ========================================
-
-function switchView(view) {
-  appState.currentView = view;
-  
-  document.querySelectorAll('.view-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.view === view);
-  });
-  
-  if (view === 'today') {
-    document.getElementById('todayView').classList.remove('hidden');
-    document.getElementById('weeklyOverview').classList.add('hidden');
-    renderAll();
-  } else {
-    document.getElementById('todayView').classList.add('hidden');
-    document.getElementById('weeklyOverview').classList.remove('hidden');
-    renderWeeklyView();
-  }
-  
-  saveState();
-}
-
-// ========================================
-// TODAY VIEW RENDERING
+// RENDER ALL SECTIONS
 // ========================================
 
 function renderAll() {
@@ -224,6 +187,7 @@ function renderAll() {
   renderWeeklyRotation();
   renderBonusTasks();
   updateStats();
+  updateSyncStatus();
 }
 
 function renderDailyCore() {
@@ -252,11 +216,17 @@ function renderDailyCore() {
     const completed = appState.coreCompleted.includes(task.id);
     
     let taskName = task.name;
+    let extraInfo = '';
+    
     if (task.id === 'pimsleur' && task.autoProgress) {
       const lessonNum = appState.pimsleurProgress;
       const unitNum = Math.ceil(lessonNum / 30);
       const lessonInUnit = ((lessonNum - 1) % 30) + 1;
       taskName = `Pimsleur Unit ${unitNum}, Lesson ${lessonInUnit}`;
+      
+      if (appState.pimsleurCompletedToday) {
+        extraInfo = '<div class="task-description" style="color: var(--green); font-weight: 500; margin-top: 0.3rem;">✅ Completed today! (Next: Lesson ' + (lessonNum + 1) + ')</div>';
+      }
     }
     
     taskDiv.className = `task ${completed ? 'completed' : ''}`;
@@ -269,6 +239,7 @@ function renderDailyCore() {
       <div class="task-content">
         <div class="task-title">${taskName}</div>
         <div class="task-description">${task.description}</div>
+        ${extraInfo}
         ${task.instruction ? `<div class="task-description" style="font-style: italic; margin-top: 0.3rem;">💡 ${task.instruction}</div>` : ''}
         ${urlHTML}
         <div class="task-meta">
@@ -320,6 +291,7 @@ function renderWeeklyRotation() {
   `;
   
   container.appendChild(weeklySection);
+  
   weeklySection.querySelector('.task').addEventListener('click', () => toggleWeeklyTask(today));
 }
 
@@ -370,227 +342,37 @@ function renderBonusTasks() {
 }
 
 // ========================================
-// WEEKLY VIEW RENDERING
-// ========================================
-
-function renderWeeklyView() {
-  renderWeeklyCalendar();
-  renderWeeklyStats();
-  renderWeeklyDelta();
-}
-
-function renderWeeklyCalendar() {
-  const container = document.getElementById('weeklyCalendar');
-  const weekKey = getWeekKey();
-  const weekDates = getWeekDates(weekKey);
-  const weekHistory = appState.weeklyHistory[weekKey] || { days: {} };
-  
-  const today = getDayKey();
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  
-  const daysHTML = weekDates.map((date, index) => {
-    const dayKey = getDayKey(date);
-    const dayData = weekHistory.days[dayKey] || { coreCompleted: 0, coreTotal: 4 };
-    
-    const isToday = dayKey === today;
-    const completed = dayData.coreCompleted === dayData.coreTotal;
-    const partial = dayData.coreCompleted > 0 && dayData.coreCompleted < dayData.coreTotal;
-    const missed = dayData.coreCompleted === 0 && new Date(dayKey) < new Date(today);
-    
-    let className = 'day-card';
-    if (isToday) className += ' today';
-    else if (completed) className += ' completed';
-    else if (partial) className += ' partial';
-    else if (missed) className += ' missed';
-    
-    const checkmarks = Array(4).fill(0).map((_, i) => 
-      `<div class="day-check ${i < dayData.coreCompleted ? 'done' : ''}"></div>`
-    ).join('');
-    
-    return `
-      <div class="${className}">
-        <div class="day-name">${dayNames[index]}</div>
-        <div class="day-date">${date.getDate()}</div>
-        <div class="day-progress">${dayData.coreCompleted}/${dayData.coreTotal}</div>
-        <div class="day-checkmarks">${checkmarks}</div>
-      </div>
-    `;
-  }).join('');
-  
-  container.innerHTML = `
-    <h3>📅 This Week</h3>
-    <div class="week-grid">${daysHTML}</div>
-  `;
-}
-
-function renderWeeklyStats() {
-  const container = document.getElementById('weeklyStats');
-  const weekKey = getWeekKey();
-  const weekHistory = appState.weeklyHistory[weekKey] || { days: {} };
-  
-  let totalCore = 0;
-  let completedCore = 0;
-  let totalWeekly = 0;
-  let completedWeekly = 0;
-  let bonusCount = 0;
-  
-  Object.values(weekHistory.days).forEach(day => {
-    totalCore += day.coreTotal || 4;
-    completedCore += day.coreCompleted || 0;
-    totalWeekly += day.weeklyTotal || 1;
-    completedWeekly += day.weeklyCompleted || 0;
-    bonusCount += day.bonusCompleted || 0;
-  });
-  
-  const corePercent = totalCore > 0 ? Math.round((completedCore / totalCore) * 100) : 0;
-  const weeklyPercent = totalWeekly > 0 ? Math.round((completedWeekly / totalWeekly) * 100) : 0;
-  
-  container.innerHTML = `
-    <h3>📊 Week Stats</h3>
-    <div class="stats-grid-weekly">
-      <div class="stat-item">
-        <div class="stat-item-label">Core Tasks</div>
-        <div class="stat-item-value">${corePercent}%</div>
-        <div class="stat-item-detail">${completedCore}/${totalCore} completed</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-item-label">Weekly Tasks</div>
-        <div class="stat-item-value">${weeklyPercent}%</div>
-        <div class="stat-item-detail">${completedWeekly}/${totalWeekly} completed</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-item-label">Bonus Tasks</div>
-        <div class="stat-item-value">${bonusCount}</div>
-        <div class="stat-item-detail">Extra effort!</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-item-label">Pimsleur Progress</div>
-        <div class="stat-item-value">${appState.pimsleurProgress}</div>
-        <div class="stat-item-detail">of 150 lessons</div>
-      </div>
-    </div>
-  `;
-}
-
-function renderWeeklyDelta() {
-  const container = document.getElementById('weeklyDelta');
-  const weekKey = getWeekKey();
-  const weekHistory = appState.weeklyHistory[weekKey] || { days: {} };
-  
-  // Calculate stats
-  const dayKeys = Object.keys(weekHistory.days);
-  const totalDays = dayKeys.length;
-  
-  let fullCompletions = 0;
-  let partialDays = 0;
-  let missedDays = 0;
-  const dayPattern = {};
-  
-  dayKeys.forEach(dayKey => {
-    const day = weekHistory.days[dayKey];
-    const dayOfWeek = new Date(dayKey).getDay();
-    const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
-    
-    if (!dayPattern[dayName]) dayPattern[dayName] = { completed: 0, total: 0 };
-    dayPattern[dayName].total++;
-    
-    if (day.coreCompleted === day.coreTotal) {
-      fullCompletions++;
-      dayPattern[dayName].completed++;
-    } else if (day.coreCompleted > 0) {
-      partialDays++;
-    } else {
-      missedDays++;
-    }
-  });
-  
-  // Find weak day
-  let weakDay = null;
-  let weakPercent = 100;
-  Object.entries(dayPattern).forEach(([day, stats]) => {
-    const percent = (stats.completed / stats.total) * 100;
-    if (percent < weakPercent && stats.total > 0) {
-      weakDay = day;
-      weakPercent = percent;
-    }
-  });
-  
-  // Generate insights
-  const totalCoreExpected = totalDays * 4;
-  let totalCoreCompleted = 0;
-  Object.values(weekHistory.days).forEach(day => {
-    totalCoreCompleted += day.coreCompleted || 0;
-  });
-  
-  const completionRate = totalCoreExpected > 0 ? Math.round((totalCoreCompleted / totalCoreExpected) * 100) : 0;
-  
-  // Smart recovery plan
-  const recoveryItems = [];
-  
-  if (partialDays > 0) {
-    recoveryItems.push(`You have ${partialDays} partial day(s). Pick one task from those days and do it this weekend.`);
-  }
-  
-  if (missedDays > 1) {
-    recoveryItems.push(`${missedDays} full misses. Don't catch up — just restart with Monday. Focus on consistency.`);
-  }
-  
-  if (weakDay && weakPercent < 70) {
-    recoveryItems.push(`${weakDay}s are your weak day (${Math.round(weakPercent)}% completion). Consider swapping ${weakDay}'s weekly task to Sunday.`);
-  }
-  
-  if (fullCompletions >= 5) {
-    recoveryItems.push(`5+ full days! You're crushing it. Keep the momentum.`);
-  }
-  
-  const insightHTML = completionRate >= 80 
-    ? `<div class="insight-box"><strong>💪 You're thriving!</strong> ${completionRate}% is excellent consistency. This is what B2 progress looks like.</div>`
-    : completionRate >= 60
-    ? `<div class="insight-box"><strong>🎯 You're on track</strong> ${completionRate}% completion. You're building the habit. Keep showing up.</div>`
-    : `<div class="insight-box"><strong>🧠 Pattern detected</strong> ${completionRate}% this week. Life happened. That's normal. See recovery plan below.</div>`;
-  
-  const recoveryHTML = recoveryItems.length > 0
-    ? `<div class="recovery-plan">
-        <strong>📋 Recovery Plan</strong>
-        <ul class="delta-list">
-          ${recoveryItems.map(item => `<li>${item}</li>`).join('')}
-        </ul>
-      </div>`
-    : '';
-  
-  container.innerHTML = `
-    <h3>🧭 Weekly Delta & Recovery</h3>
-    <div class="delta-section">
-      <div class="delta-title">What You Did</div>
-      <div class="delta-content">
-        ✅ <strong>${totalCoreCompleted}/${totalCoreExpected} tasks</strong> (${completionRate}%)<br>
-        💪 ${fullCompletions} full completion days<br>
-        ⚡ ${partialDays} partial days<br>
-        ${missedDays > 0 ? `🔄 ${missedDays} missed days` : ''}
-      </div>
-      ${insightHTML}
-    </div>
-    ${recoveryHTML}
-  `;
-}
-
-// ========================================
-// TASK INTERACTION
+// TASK INTERACTION (FIXED)
 // ========================================
 
 function toggleCoreTask(taskId) {
+  const today = new Date().toISOString().split('T')[0];
   const index = appState.coreCompleted.indexOf(taskId);
   
   if (index > -1) {
+    // Uncompleting task
     appState.coreCompleted.splice(index, 1);
+    
+    // If uncompleting Pimsleur AND it was completed today, decrement
+    if (taskId === 'pimsleur' && appState.pimsleurCompletedToday && appState.lastPimsleurDate === today) {
+      appState.pimsleurProgress--;
+      appState.pimsleurCompletedToday = false;
+      console.log('⬅️ Pimsleur decremented to', appState.pimsleurProgress);
+    }
   } else {
+    // Completing task
     appState.coreCompleted.push(taskId);
     appState.totalCompleted++;
     
-    if (taskId === 'pimsleur') {
+    // Auto-increment Pimsleur ONLY if not already done today
+    if (taskId === 'pimsleur' && !appState.pimsleurCompletedToday) {
       appState.pimsleurProgress++;
+      appState.pimsleurCompletedToday = true;
+      appState.lastPimsleurDate = today;
+      console.log('➡️ Pimsleur incremented to', appState.pimsleurProgress);
     }
     
+    // Check if all core tasks done
     const level = appState.level;
     const coreTasks = tasksConfig.dailyCore[level];
     if (appState.coreCompleted.length === coreTasks.length) {
@@ -608,7 +390,6 @@ function toggleWeeklyTask(day) {
   if (appState.weeklyCompleted[day]) {
     appState.totalCompleted++;
   }
-  updateDailyHistory();
   saveState();
   renderAll();
 }
@@ -623,39 +404,30 @@ function toggleBonusTask(taskId) {
     appState.totalCompleted++;
   }
   
-  updateDailyHistory();
   saveState();
   renderAll();
+}
+
+function updateDailyHistory() {
+  const today = new Date().toISOString().split('T')[0];
+  if (!appState.dailyHistory) {
+    appState.dailyHistory = {};
+  }
+  
+  appState.dailyHistory[today] = {
+    coreCompleted: [...appState.coreCompleted],
+    weeklyCompleted: { ...appState.weeklyCompleted },
+    bonusCompleted: [...appState.bonusCompleted],
+    pimsleurLesson: appState.pimsleurProgress
+  };
 }
 
 function showCelebration() {
   const cel = document.getElementById('celebration');
   cel.classList.add('show');
-  setTimeout(() => cel.classList.remove('show'), 2500);
-}
-
-// ========================================
-// HISTORY TRACKING
-// ========================================
-
-function updateDailyHistory() {
-  const weekKey = getWeekKey();
-  const dayKey = getDayKey();
-  
-  if (!appState.weeklyHistory[weekKey]) {
-    appState.weeklyHistory[weekKey] = { days: {} };
-  }
-  
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const today = days[new Date().getDay()];
-  
-  appState.weeklyHistory[weekKey].days[dayKey] = {
-    coreCompleted: appState.coreCompleted.length,
-    coreTotal: 4,
-    weeklyCompleted: appState.weeklyCompleted[today] ? 1 : 0,
-    weeklyTotal: 1,
-    bonusCompleted: appState.bonusCompleted.length
-  };
+  setTimeout(() => {
+    cel.classList.remove('show');
+  }, 2500);
 }
 
 // ========================================
@@ -663,36 +435,34 @@ function updateDailyHistory() {
 // ========================================
 
 function updateStats() {
-  const today = new Date().toDateString();
-  const lastVisit = appState.lastVisit ? new Date(appState.lastVisit).toDateString() : null;
+  const today = new Date().toISOString().split('T')[0];
+  const lastVisit = appState.lastVisit ? appState.lastVisit.split('T')[0] : null;
   
   if (lastVisit !== today) {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
     
+    // Check if all core tasks were completed yesterday
     const level = appState.level;
     const coreTasks = tasksConfig.dailyCore[level];
     const allCoreCompleted = appState.coreCompleted.length === coreTasks.length;
     
-    if (lastVisit === yesterday.toDateString() && allCoreCompleted) {
+    if (lastVisit === yesterdayStr && allCoreCompleted) {
       appState.streak++;
-    } else if (lastVisit && !allCoreCompleted) {
+      console.log('🔥 Streak continued:', appState.streak);
+    } else if (lastVisit && lastVisit !== yesterdayStr) {
       appState.streak = 0;
+      console.log('💔 Streak broken');
     } else if (!lastVisit) {
       appState.streak = 0;
     }
-    
-    // Update history before resetting
-    updateDailyHistory();
-    
-    // Reset daily tasks
-    appState.coreCompleted = [];
-    appState.bonusCompleted = [];
     
     appState.lastVisit = new Date().toISOString();
     saveState();
   }
   
+  // Calculate today's progress
   const level = appState.level;
   const coreTasks = tasksConfig.dailyCore[level];
   const coreTotal = coreTasks.length;
@@ -704,49 +474,89 @@ function updateStats() {
   document.getElementById('stat-today').textContent = todayPercent + '%';
 }
 
+function updateSyncStatus() {
+  // Add sync indicator in header if needed
+  const statusEl = document.querySelector('.sync-status');
+  if (statusEl) {
+    if (appState.syncStatus === 'synced') {
+      statusEl.textContent = '🟢';
+      statusEl.title = 'Synced to cloud';
+    } else if (appState.syncStatus === 'syncing') {
+      statusEl.textContent = '🟡';
+      statusEl.title = 'Syncing...';
+    } else {
+      statusEl.textContent = '🔴';
+      statusEl.title = 'Offline - data saved locally';
+    }
+  }
+}
+
 // ========================================
-// STATE PERSISTENCE
+// STATE PERSISTENCE (FIXED)
 // ========================================
 
 async function saveState() {
+  appState.syncStatus = 'syncing';
+  updateSyncStatus();
+  
+  // Always save to localStorage first (instant, reliable)
   try {
-    await db.collection('users').doc('me').set(appState);
+    localStorage.setItem('french_tracker_state', JSON.stringify(appState));
+    console.log('💾 Saved to localStorage');
   } catch (error) {
-    console.log('Firestore save failed, using localStorage:', error);
+    console.error('❌ localStorage save failed:', error);
   }
   
-  localStorage.setItem('french_tracker_state', JSON.stringify(appState));
+  // Then try Firestore (async, may fail)
+  try {
+    await db.collection('users').doc('me').set(appState);
+    appState.syncStatus = 'synced';
+    console.log('☁️ Synced to Firestore');
+  } catch (error) {
+    appState.syncStatus = 'offline';
+    console.log('⚠️ Firestore sync failed (offline mode):', error.message);
+  }
+  
+  updateSyncStatus();
 }
 
 async function loadState() {
+  console.log('📂 Loading state...');
+  
+  // Try Firestore first
   try {
     const doc = await db.collection('users').doc('me').get();
     if (doc.exists) {
-      appState = { ...appState, ...doc.data() };
-      console.log('Loaded state from Firestore');
-    } else {
-      const local = localStorage.getItem('french_tracker_state');
-      if (local) {
-        appState = { ...appState, ...JSON.parse(local) };
-        console.log('Loaded state from localStorage');
-      }
+      const cloudData = doc.data();
+      appState = { ...appState, ...cloudData };
+      console.log('☁️ Loaded from Firestore');
+      appState.syncStatus = 'synced';
+      
+      // Also update localStorage with cloud data
+      localStorage.setItem('french_tracker_state', JSON.stringify(appState));
+      return;
     }
   } catch (error) {
-    console.log('Firestore load failed, using localStorage:', error);
+    console.log('⚠️ Firestore load failed, trying localStorage:', error.message);
+  }
+  
+  // Fallback to localStorage
+  try {
     const local = localStorage.getItem('french_tracker_state');
     if (local) {
       appState = { ...appState, ...JSON.parse(local) };
+      console.log('💾 Loaded from localStorage');
+      appState.syncStatus = 'offline';
     }
+  } catch (error) {
+    console.error('❌ localStorage load failed:', error);
   }
   
+  // Initialize defaults if first time
   if (!appState.startDate) {
     appState.startDate = new Date().toISOString();
+    appState.lastVisit = new Date().toISOString();
     saveState();
-  }
-  
-  // Initialize weekly history if missing
-  if (!appState.weeklyHistory) {
-    appState.weeklyHistory = {};
   }
 }
 
@@ -757,15 +567,13 @@ async function loadState() {
 function setupEventListeners() {
   document.getElementById('themeToggle').addEventListener('click', toggleTheme);
   
-  document.querySelectorAll('.view-btn').forEach(btn => {
-    btn.addEventListener('click', () => switchView(btn.dataset.view));
-  });
-  
   document.getElementById('refreshBtn').addEventListener('click', () => {
-    appState.coreCompleted = [];
-    appState.bonusCompleted = [];
-    saveState();
-    renderAll();
+    if (confirm('Reset today\'s tasks? This will NOT affect your Pimsleur progress or streak.')) {
+      appState.coreCompleted = [];
+      appState.bonusCompleted = [];
+      saveState();
+      renderAll();
+    }
   });
   
   document.getElementById('resetBtn').addEventListener('click', resetProgress);
@@ -773,12 +581,11 @@ function setupEventListeners() {
 }
 
 function resetProgress() {
-  if (!confirm('Reset all progress? This cannot be undone.')) return;
+  if (!confirm('Reset ALL progress? This will delete everything and cannot be undone.')) return;
   
   appState = {
     currentPhase: 0,
     level: 'A2',
-    weeklyHistory: {},
     coreCompleted: [],
     weeklyCompleted: {},
     bonusCompleted: [],
@@ -788,7 +595,10 @@ function resetProgress() {
     lastVisit: null,
     theme: appState.theme,
     pimsleurProgress: 16,
-    currentView: 'today'
+    pimsleurCompletedToday: false,
+    lastPimsleurDate: null,
+    dailyHistory: {},
+    syncStatus: 'pending'
   };
   
   saveState();
@@ -806,6 +616,8 @@ function exportData() {
   link.click();
   
   URL.revokeObjectURL(url);
+  
+  alert('Backup downloaded! Keep this file safe.');
 }
 
 // ========================================
@@ -817,3 +629,61 @@ if (document.readyState === 'loading') {
 } else {
   init();
 }
+
+// ========================================
+// WORK AHEAD MODE
+// ========================================
+
+let workAheadDays = 0;
+
+function showWorkAheadModal() {
+  const modal = document.getElementById('workAheadModal');
+  
+  // Update lesson numbers
+  document.getElementById('lesson-tomorrow').textContent = appState.pimsleurProgress + 1;
+  document.getElementById('lesson-dayafter').textContent = appState.pimsleurProgress + 2;
+  document.getElementById('lesson-3days').textContent = appState.pimsleurProgress + 3;
+  
+  modal.classList.add('show');
+}
+
+function closeWorkAheadModal() {
+  document.getElementById('workAheadModal').classList.remove('show');
+}
+
+function workAhead(days) {
+  workAheadDays = days;
+  
+  const targetDate = new Date();
+  targetDate.setDate(targetDate.getDate() + days);
+  const dateStr = targetDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+  
+  document.getElementById('workAheadDate').textContent = dateStr;
+  document.getElementById('workAheadBanner').style.display = 'block';
+  
+  // Update Pimsleur to show future lesson
+  appState.pimsleurProgress += days - 1; // Will increment by 1 when clicked
+  
+  closeWorkAheadModal();
+  renderAll();
+}
+
+function exitWorkAheadMode() {
+  // Reset to today
+  workAheadDays = 0;
+  document.getElementById('workAheadBanner').style.display = 'none';
+  
+  // Reload normal state
+  renderAll();
+}
+
+// ========================================
+// UPDATE EVENT LISTENERS
+// ========================================
+
+const originalSetupEventListeners = setupEventListeners;
+setupEventListeners = function() {
+  originalSetupEventListeners();
+  
+  document.getElementById('workAheadBtn').addEventListener('click', showWorkAheadModal);
+};
