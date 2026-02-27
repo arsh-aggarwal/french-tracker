@@ -6,12 +6,12 @@
 
 // REPLACE THESE with your actual Firebase project details:
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",
-  authDomain: "your-project-id.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project-id.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:abc123def456"
+  apiKey: "AIzaSyBBPElVsQPgp0_9o8C8dWvGfIGKLu8MA-Y",
+  authDomain: "french-tracker.firebaseapp.com",
+  projectId: "french-tracker",
+  storageBucket: "french-tracker.firebasestorage.app",
+  messagingSenderId: "31491643896",
+  appId: "1:31491643896:web:9c24206476855d00c19e0d"
 };
 
 // ========================================
