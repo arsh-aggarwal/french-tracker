@@ -365,8 +365,7 @@ function toggleCoreTask(taskId) {
     appState.totalCompleted++;
     
     // Auto-increment Pimsleur ONLY if not already done today
-    if (taskId === 'pimsleur') {
-      if (!appState.pimsleurCompletedToday || appState.lastPimsleurDate !== today) {
+      if (taskId === 'pimsleur' && (!appState.pimsleurCompletedToday || appState.lastPimsleurDate !== today)) {
         appState.pimsleurProgress++;
         appState.pimsleurCompletedToday = true;
         appState.lastPimsleurDate = today;
@@ -374,7 +373,6 @@ function toggleCoreTask(taskId) {
       } else {
         console.log('⏸️ Pimsleur already completed today, no increment');
       }
-    }
     
     // Check if all core tasks done
     const level = appState.level;
