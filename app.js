@@ -3,12 +3,12 @@
 // ========================================
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBBPElVsQPgp0_9o8C8dWvGfIGKLu8MA-Y",
-  authDomain: "french-tracker.firebaseapp.com",
-  projectId: "french-tracker",
-  storageBucket: "french-tracker.firebasestorage.app",
-  messagingSenderId: "31491643896",
-  appId: "1:31491643896:web:9c24206476855d00c19e0d"
+  apiKey: "REPLACE_WITH_YOUR_API_KEY",
+  authDomain: "REPLACE_ME.firebaseapp.com",
+  projectId: "REPLACE_ME",
+  storageBucket: "REPLACE_ME.appspot.com",
+  messagingSenderId: "REPLACE_ME",
+  appId: "REPLACE_ME"
 };
 
 // Initialize Firebase
@@ -365,7 +365,8 @@ function toggleCoreTask(taskId) {
     appState.totalCompleted++;
     
     // Auto-increment Pimsleur ONLY if not already done today
-      if (taskId === 'pimsleur' && (!appState.pimsleurCompletedToday || appState.lastPimsleurDate !== today)) {
+    if (taskId === 'pimsleur') {
+      if (!appState.pimsleurCompletedToday || appState.lastPimsleurDate !== today) {
         appState.pimsleurProgress++;
         appState.pimsleurCompletedToday = true;
         appState.lastPimsleurDate = today;
@@ -373,6 +374,7 @@ function toggleCoreTask(taskId) {
       } else {
         console.log('⏸️ Pimsleur already completed today, no increment');
       }
+    }
     
     // Check if all core tasks done
     const level = appState.level;
