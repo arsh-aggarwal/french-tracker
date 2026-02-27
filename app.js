@@ -1,19 +1,12 @@
-// ========================================
-// FIREBASE CONFIGURATION
-// ========================================
 
-const firebaseConfig = {
-  apiKey: "REPLACE_WITH_YOUR_API_KEY",
-  authDomain: "REPLACE_ME.firebaseapp.com",
-  projectId: "REPLACE_ME",
-  storageBucket: "REPLACE_ME.appspot.com",
-  messagingSenderId: "REPLACE_ME",
-  appId: "REPLACE_ME"
-};
+// ========================================
+// FIREBASE INITIALIZATION
+// ========================================
+// Config loaded from firebase-config.js
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+
 
 // ========================================
 // STATE MANAGEMENT
