@@ -20,14 +20,7 @@
         "order": 1,
         "autoProgress": true,
         "currentLesson": 16,
-        "totalLessons": 150,
-        "units": [
-          { "unit": 1, "lessons": 30 },
-          { "unit": 2, "lessons": 30 },
-          { "unit": 3, "lessons": 30 },
-          { "unit": 4, "lessons": 30 },
-          { "unit": 5, "lessons": 30 }
-        ]
+        "totalLessons": 150
       },
       {
         "id": "anki-review",
@@ -36,8 +29,7 @@
         "time": "10min",
         "type": "anki",
         "mandatory": true,
-        "order": 2,
-        "instruction": "Reviews only. Timer stops you at 10min."
+        "order": 2
       },
       {
         "id": "podcast-chunk",
@@ -47,19 +39,57 @@
         "type": "listen",
         "mandatory": true,
         "order": 3,
+        "hasRefresh": true,
         "sources": [
           {
-            "name": "Simply French Podcast A2",
-            "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c",
-            "level": "A2"
+            "name": "InnerFrench #1 - Pourquoi le français est difficile",
+            "url": "https://innerfrench.com/podcast/001-pourquoi-francais-difficile/",
+            "level": "A2",
+            "description": "Slow, clear speech. Perfect for beginners."
           },
           {
-            "name": "InnerFrench (slow episodes)",
-            "url": "https://innerfrench.com/podcast/",
-            "level": "A2"
+            "name": "Journal en français facile (RFI)",
+            "url": "https://francaisfacile.rfi.fr/fr/podcasts/journal-en-français-facile/",
+            "level": "A2",
+            "description": "Daily news in simple French. With transcripts!"
+          },
+          {
+            "name": "Learn French | La Pause Café Croissant - Beginner A1-A2",
+            "url": "https://shows.acast.com/learn-french-la-pause-cafe-croissant",
+            "level": "A2",
+            "description": "Everyday situations. Perfect for beginners."
+          },
+          {
+            "name": "LanguaTalk Slow French - Beginner Episodes",
+            "url": "https://www.languatalk.com/blog/french-podcast",
+            "level": "A2",
+            "description": "Gaëlle speaks slowly with transcripts."
+          },
+          {
+            "name": "Easy French - Super Easy Episodes",
+            "url": "https://www.easyfrench.fm/",
+            "level": "A2",
+            "description": "Street interviews with French subtitles."
+          },
+          {
+            "name": "French BlaBla Podcast",
+            "url": "https://frenchblabla.com/",
+            "level": "A2",
+            "description": "Teacher speaks in English + French. Great for beginners."
+          },
+          {
+            "name": "One Thing In A French Day",
+            "url": "https://french.listen-to.me/",
+            "level": "A2",
+            "description": "5-minute daily life stories. Very accessible."
+          },
+          {
+            "name": "InnerFrench #2 - Comment améliorer sa prononciation",
+            "url": "https://innerfrench.com/podcast/002-ameliorer-prononciation/",
+            "level": "A2",
+            "description": "Pronunciation tips in slow French."
           }
-        ],
-        "instruction": "Pick ONE source. Use same episode all week. Advance 3 min each day."
+        ]
       },
       {
         "id": "oral-summary",
@@ -68,22 +98,19 @@
         "time": "2min",
         "type": "speak",
         "mandatory": true,
-        "order": 4,
-        "instruction": "Record yourself OR speak to mirror. Don't overthink."
+        "order": 4
       }
     ],
     "B1": [
       {
         "id": "pimsleur",
         "name": "Pimsleur Audio Lesson",
-        "description": "Continue your progression. Currently completing Units 1-5.",
+        "description": "Continue your progression.",
         "time": "20min",
         "type": "pimsleur",
         "mandatory": true,
         "order": 1,
-        "autoProgress": true,
-        "currentLesson": 16,
-        "totalLessons": 150
+        "autoProgress": true
       },
       {
         "id": "anki-review",
@@ -102,16 +129,49 @@
         "type": "listen",
         "mandatory": true,
         "order": 3,
+        "hasRefresh": true,
         "sources": [
           {
-            "name": "InnerFrench (normal speed)",
+            "name": "InnerFrench - Normal Speed Episodes",
             "url": "https://innerfrench.com/podcast/",
-            "level": "B1"
+            "level": "B1",
+            "description": "Hugo speaks at normal pace. Great topics."
           },
           {
-            "name": "Simply French B1",
-            "url": "https://www.youtube.com/@SimplyFrenchPodcast-i6c",
-            "level": "B1"
+            "name": "Ohlala la France",
+            "url": "https://www.ohlalafrenchcourse.com/en/blog/article/the-perfect-podcast-to-learn-french-for-levels-a1-a2-b1-b2-and-c1",
+            "level": "B1",
+            "description": "Authentic French culture discussions."
+          },
+          {
+            "name": "Français Authentique",
+            "url": "https://www.francaisauthentique.com/",
+            "level": "B1",
+            "description": "Johan teaches expressions and grammar."
+          },
+          {
+            "name": "Easy French - Regular Episodes",
+            "url": "https://www.easyfrench.fm/",
+            "level": "B1",
+            "description": "Street conversations, real French."
+          },
+          {
+            "name": "LanguaTalk Slow French - Intermediate",
+            "url": "https://www.languatalk.com/blog/french-podcast",
+            "level": "B1",
+            "description": "Interviews and cultural topics."
+          },
+          {
+            "name": "French Etc - Today's French",
+            "url": "https://french-etc.com/",
+            "level": "B1",
+            "description": "Useful expressions in 10-min episodes."
+          },
+          {
+            "name": "News in Slow French - Intermediate",
+            "url": "https://www.newsinslowfrench.com/",
+            "level": "B1",
+            "description": "World news at manageable speed."
           }
         ]
       },
@@ -129,13 +189,11 @@
       {
         "id": "pimsleur",
         "name": "Pimsleur Review Cycle",
-        "description": "You've finished the main units. Review random lessons from Units 3-5.",
+        "description": "Review random lessons from Units 3-5.",
         "time": "20min",
         "type": "pimsleur",
         "mandatory": true,
-        "order": 1,
-        "autoProgress": false,
-        "instruction": "Random review mode"
+        "order": 1
       },
       {
         "id": "anki-review",
@@ -154,16 +212,43 @@
         "type": "listen",
         "mandatory": true,
         "order": 3,
+        "hasRefresh": true,
         "sources": [
           {
             "name": "France Culture",
             "url": "https://www.radiofrance.fr/franceculture",
-            "level": "B2"
+            "level": "B2",
+            "description": "Intellectual discussions, native speed."
           },
           {
-            "name": "Le Monde podcasts",
+            "name": "Le Monde - Podcasts",
             "url": "https://www.lemonde.fr/podcasts/",
-            "level": "B2"
+            "level": "B2",
+            "description": "News analysis and current events."
+          },
+          {
+            "name": "Transfert",
+            "url": "https://www.slate.fr/podcast/transfert",
+            "level": "B2",
+            "description": "Personal stories, very captivating."
+          },
+          {
+            "name": "Émotions by Louie Média",
+            "url": "https://louiemedia.com/emotions",
+            "level": "B2",
+            "description": "Science of emotions with interviews."
+          },
+          {
+            "name": "InnerFrench - Advanced Topics",
+            "url": "https://innerfrench.com/podcast/",
+            "level": "B2",
+            "description": "Complex topics, full speed."
+          },
+          {
+            "name": "Choses à Savoir",
+            "url": "https://www.chosesasavoir.com/",
+            "level": "B2",
+            "description": "3-min episodes on science, history, culture."
           }
         ]
       },
@@ -187,59 +272,46 @@
         "task": "Read 1 paragraph from any French text aloud",
         "time": "10min",
         "type": "read",
-        "sources": ["RFI article", "Clémence dialogue", "Any French book"],
-        "instruction": "Focus on pronunciation. Re-read 3 times."
+        "sources": ["RFI article", "Clémence dialogue", "Any French book"]
       },
       "Tuesday": {
         "task": "Prep for friend session (if happening)",
         "time": "10min",
         "type": "write",
-        "instruction": "Write 3 topics you want to discuss + 5 key words for each.",
         "note": "If no friend session this week, write 5 sentences about your day instead."
       },
       "Wednesday": {
         "task": "Clémence lesson (any level)",
         "time": "20min",
         "type": "clemence",
-        "url": "https://www.learnfrenchwithclemence.com",
-        "instruction": "Watch lesson. Take notes. That's it. No exercises required."
+        "url": "https://www.learnfrenchwithclemence.com"
       },
       "Thursday": {
         "task": "Write 5 simple sentences",
         "time": "10min",
-        "type": "write",
-        "instruction": "Use today's Pimsleur lesson vocabulary. Keep it simple."
+        "type": "write"
       },
       "Friday": {
         "task": "Shadow 1 minute of this week's podcast",
         "time": "10min",
-        "type": "speak",
-        "instruction": "Pick any 1-minute segment. Repeat 5-10 times. Mimic exactly."
+        "type": "speak"
       },
       "Saturday": {
         "task": "Extended listening (optional)",
         "time": "15min",
-        "type": "listen",
-        "instruction": "Continue this week's podcast OR start a new one. No summary required."
+        "type": "listen"
       },
       "Sunday": {
         "task": "Rest / Catch-up / French exposure",
         "time": "flexible",
-        "type": "flexible",
-        "options": [
-          "Watch French movie/show with subtitles",
-          "Catch up on missed weekly tasks",
-          "Review this week's Pimsleur lessons",
-          "Literally nothing (rest day)"
-        ]
+        "type": "flexible"
       }
     }
   },
 
   "bonusTasks": {
-    "description": "High energy only. Add these AFTER completing dailyCore + weekly task.",
+    "description": "High energy only. Does NOT affect streak.",
     "streakDepends": false,
-    "conditions": "Only do these if you WANT to. Never out of guilt.",
     "available": {
       "extendPodcast": {
         "name": "Extend podcast from 3min → 6min",
@@ -255,86 +327,29 @@
       "shadowingPractice": {
         "name": "1-minute shadowing exercise",
         "time": "10min",
-        "type": "speak",
-        "instruction": "Take any 1-min segment. Shadow 10 times."
+        "type": "speak"
       },
       "ankiNewCards": {
         "name": "Add 5 new Anki cards",
         "time": "5min",
-        "type": "anki",
-        "instruction": "ONLY if you want to. Not required."
+        "type": "anki"
       },
       "goFluentExercise": {
         "name": "GoFluent exercise",
         "time": "15min",
         "type": "gofluent",
-        "availableFrom": "B1",
-        "instruction": "Use sparingly. You have limited access."
+        "availableFrom": "B1"
       },
       "readingPractice": {
         "name": "Read full RFI or Le Monde article",
         "time": "15-20min",
-        "type": "read",
-        "sources": {
-          "A2": "https://savoirs.rfi.fr/fr",
-          "B1": "https://www.20minutes.fr",
-          "B2": "https://www.lemonde.fr"
-        }
+        "type": "read"
       },
       "writingPractice": {
         "name": "Write 100-word paragraph",
         "time": "15min",
-        "type": "write",
-        "instruction": "Journal entry OR opinion on a topic."
+        "type": "write"
       }
-    }
-  },
-
-  "resources": {
-    "pimsleur": {
-      "description": "Your morning anchor. Auto-progresses daily.",
-      "structure": "5 units × 30 lessons = 150 total lessons",
-      "currentProgress": 16,
-      "url": "Your Pimsleur app/audio files",
-      "instruction": "Listen while making coffee, during commute, or first thing. Must speak out loud."
-    },
-    "anki": {
-      "description": "Reviews only. No new cards in dailyCore.",
-      "recommendation": "Use Clémence vocab deck OR core 2000 French deck",
-      "timeCap": {
-        "A2": "10min",
-        "B1": "10min",
-        "B2": "12min"
-      }
-    },
-    "podcasts": {
-      "A2": [
-        "Simply French Podcast A2",
-        "InnerFrench (slow)",
-        "Français Facile"
-      ],
-      "B1": [
-        "InnerFrench (normal)",
-        "Simply French B1",
-        "Easy French"
-      ],
-      "B2": [
-        "France Culture",
-        "Le Monde podcasts",
-        "InnerFrench advanced"
-      ],
-      "instruction": "Pick ONE. Stick with same episode all week. Advance 3-5 min per day."
-    },
-    "clemence": {
-      "description": "Moved to Wednesday weekly rotation. NOT daily.",
-      "url": "https://www.learnfrenchwithclemence.com",
-      "instruction": "One lesson per week is enough. Quality > quantity."
-    },
-    "gofluent": {
-      "description": "Limited access from employer. Use strategically.",
-      "availableFrom": "B1",
-      "recommendation": "Use once per week max. Save for specific grammar questions or speaking practice.",
-      "instruction": "Don't waste it on things you can get free elsewhere."
     }
   },
 
@@ -344,54 +359,27 @@
       "name": "Absorption Phase",
       "level": "A2",
       "months": "1-4",
-      "description": "Focus: Input + consistency. Build the daily habit. Pimsleur + listening foundation.",
-      "goals": [
-        "Complete Pimsleur Units 1-2 (60 lessons)",
-        "Establish unbreakable 35-min daily core",
-        "Build basic speaking confidence"
-      ]
+      "description": "Focus: Input + consistency. Build the daily habit."
     },
     {
       "id": "phase2",
       "name": "Volume Phase",
       "level": "B1",
       "months": "5-8",
-      "description": "Focus: Increase input volume. Transition to native content. Weekly writing kicks in.",
-      "goals": [
-        "Complete Pimsleur Units 3-4 (60 lessons)",
-        "Handle conversations with Tuesday friend",
-        "Read news without overwhelming difficulty"
-      ]
+      "description": "Focus: Increase input volume. Transition to native content."
     },
     {
       "id": "phase3",
       "name": "Output Phase",
       "level": "B2",
       "months": "9-12",
-      "description": "Focus: Active production. DELF B2 prep. Speaking and writing volume increases.",
-      "goals": [
-        "Complete Pimsleur Unit 5 + reviews",
-        "Pass DELF B2 (or genuine B2 proficiency)",
-        "Handle complex conversations confidently"
-      ]
+      "description": "Focus: Active production. DELF B2 prep."
     }
   ],
 
   "streakRules": {
     "definition": "Completing ALL 4 dailyCore tasks = 1 streak day",
     "weeklyRotation": "Does NOT affect streak",
-    "bonusTasks": "Does NOT affect streak",
-    "missedDay": "Streak resets. No guilt. Just restart.",
-    "philosophy": "Streak measures consistency, not intensity."
-  },
-
-  "progressTracking": {
-    "pimsleur": {
-      "currentLesson": 16,
-      "lastCompleted": null,
-      "autoIncrement": true
-    },
-    "weeklyRotationCompleted": {},
-    "bonusTasksThisWeek": 0
+    "bonusTasks": "Does NOT affect streak"
   }
 }
